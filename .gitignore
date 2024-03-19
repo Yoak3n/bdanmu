@@ -1,0 +1,11 @@
+*.json
+*.txt
+*.yml
+*.exe
+*.png
+pnpm-lock.yaml
+
+build/
+data/
+.vscode/
+wailsjs/
