@@ -10,14 +10,15 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
-	"github.com/tidwall/gjson"
 	"io"
 	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/PuerkitoBio/goquery"
+	"github.com/tidwall/gjson"
 )
 
 const (
@@ -33,10 +34,14 @@ JNrRuoEUXpabUzGB8QIDAQAB
 )
 
 func AuthBilibili() {
-	if ok, _, _, _ := isLogin(); ok {
+	if ok, _, _, _ := IsLogin(); ok {
 		return
 	}
 	login()
+}
+
+func LoginFromFrontend() (string, string) {
+	return getLoginUrl()
 }
 
 func checkCookieNeedRefresh() (bool, int64, error) {

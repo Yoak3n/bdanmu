@@ -3,17 +3,19 @@ package blivedanmu
 import (
 	"bdanmu/config"
 	"bdanmu/package/logger"
-	model2 "bdanmu/package/model"
+	"bdanmu/package/model"
 	"bdanmu/package/request"
+	"bdanmu/package/util"
 	"bdanmu/service"
 	"encoding/json"
 	"fmt"
-	"github.com/tidwall/gjson"
 	"math/rand/v2"
 	"time"
+
+	"github.com/tidwall/gjson"
 )
 
-func getUserInfo(uid int64) *model2.User {
+func getUserInfo(uid int64) *model.User {
 	// local database to avoid anti-crawler
 	if user := service.ReadUserRecord(uid); user != nil {
 		return user
@@ -29,25 +31,25 @@ func getUserInfo(uid int64) *model2.User {
 			logger.Logger.Debugln("getUserInfo:", result.Get("message").String())
 			count += 1
 			if count > 5 {
-				_ = config.RefreshCookie()
 				return nil
 			}
 			time.Sleep(time.Second)
 			continue
 		}
 		data := result.Get("data")
-		u := &model2.User{
+		u := &model.User{
 			UID:           uid,
 			Avatar:        data.Get("card.face").String(),
 			Name:          data.Get("card.name").String(),
-			Sex:           transSex(data.Get("card.sex").String()),
+			Sex:           util.TransSex(data.Get("card.sex").String()),
 			FollowerCount: data.Get("follower").Int(),
 		}
+		go service.UpdateUserRecord(u)
 		return u
 	}
 }
 
-func getUserInfoWithWBI(uid int64) *model2.Medal {
+func getUserInfoWithWBI(uid int64) *model.Medal {
 	mux.Lock()
 	defer mux.Unlock()
 	if user := service.ReadUserRecord(uid); user != nil {
@@ -79,7 +81,7 @@ func getUserInfoWithWBI(uid int64) *model2.Medal {
 			continue
 		}
 		if M := result.Get("data.fans_medal.medal"); M.Get("medal_name").Exists() {
-			medal := &model2.Medal{
+			medal := &model.Medal{
 				Name:     M.Get("medal_name").String(),
 				OwnerID:  uid,
 				TargetID: M.Get("target_id").Int(),
@@ -88,19 +90,6 @@ func getUserInfoWithWBI(uid int64) *model2.Medal {
 			return medal
 		}
 		return nil
-	}
-}
-
-func transSex(sex string) int {
-	switch sex {
-	case "女":
-		return 0
-	case "男":
-		return 1
-	case "保密":
-		return 2
-	default:
-		return -1
 	}
 }
 
@@ -121,14 +110,14 @@ func getMedalTargetUserInfo(targetId int64) {
 		if targetId == u.Medal.OwnerID {
 			return
 		}
-		SendMsg(medal.TargetID)
+		SendMedalMsg(medal.TargetID)
 	}
 	go service.CreateUserRecord(u)
 }
 
-func NewUserInformation(s string) *model2.User {
+func NewUserInformation(s string) *model.User {
 	result := gjson.Get(s, "data")
-	user := &model2.User{
+	user := &model.User{
 		UID:    result.Get("uid").Int(),
 		Avatar: result.Get("uinfo.base.face").String(),
 		Name:   result.Get("uname").String(),
@@ -141,14 +130,14 @@ func NewUserInformation(s string) *model2.User {
 		}
 	}
 	if m := result.Get("fans_medal"); m.Get("medal_name").String() != "" {
-		medal := &model2.Medal{
+		medal := &model.Medal{
 			Name:     m.Get("medal_name").String(),
 			Level:    int(m.Get("medal_level").Int()),
 			OwnerID:  user.UID,
 			TargetID: m.Get("target_id").Int(),
 		}
 		if config.Conf.Extension {
-			SendMsg(medal.TargetID)
+			SendMedalMsg(medal.TargetID)
 		}
 		user.Medal = medal
 	}
@@ -166,7 +155,7 @@ func NewUserInformation(s string) *model2.User {
 		go service.CreateUserRecord(user)
 	}
 
-	m := &model2.Message{
+	m := &model.Message{
 		Type: 1,
 		Data: user,
 	}

@@ -1,7 +1,9 @@
 package model
 
 type DanMu struct {
-	Sender  int
-	Content string
-	RoomId  int
+	Sender    User   `json:"user"`
+	Content   string `json:"content"`
+	RoomId    int    `josn:"room_id"`
+	Type      int8   `json:"type"`
+	MessageId string `json:"message_id"`
 }

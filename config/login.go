@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"github.com/skip2/go-qrcode"
 	"github.com/tidwall/gjson"
 	"io"
@@ -12,10 +11,15 @@ import (
 	"time"
 )
 
+func getLoginUrl() (string, string) {
+	loginKey, loginUrl := getLoginKeyAndLoginUrl()
+
+	return loginUrl, loginKey
+}
+
 func login() (string, string) {
 	for {
 		loginKey, loginUrl := getLoginKeyAndLoginUrl()
-		fmt.Println(loginKey, loginUrl)
 		fp, err := os.OpenFile("qrcode.png", os.O_WRONLY|os.O_CREATE, 0644)
 		if err != nil {
 			panic(err)
@@ -30,8 +34,8 @@ func login() (string, string) {
 			panic(err)
 		}
 		fp.Close()
-		verifyLogin(loginKey)
-		logged, data, cookieStr, csrf := isLogin()
+		VerifyLogin(loginKey)
+		logged, data, cookieStr, csrf := IsLogin()
 		if logged {
 			_ = os.Remove("qrcode.png")
 			uname := data.Get("data.uname").String()
@@ -41,14 +45,18 @@ func login() (string, string) {
 
 	}
 }
-func isLogin() (bool, gjson.Result, string, string) {
+func IsLogin(cookie ...string) (bool, gjson.Result, string, string) {
 	uri := "https://api.bilibili.com/x/web-interface/nav"
 	csrf := getCsrf()
 	cookieStr := Conf.Auth.Cookie
 	client := http.Client{}
 	req, _ := http.NewRequest("GET", uri, nil)
 	req.Header.Set("User-Agent", userAgent)
-	req.Header.Set("Cookie", cookieStr)
+	if len(cookie) > 0 {
+		req.Header.Set("Cookie", cookie[0])
+	} else {
+		req.Header.Set("Cookie", cookieStr)
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		panic(err)
@@ -59,7 +67,7 @@ func isLogin() (bool, gjson.Result, string, string) {
 	return data.Get("code").Int() == 0, data, cookieStr, csrf
 }
 
-func verifyLogin(loginKey string) {
+func VerifyLogin(loginKey string) {
 	for {
 		uri := "https://passport.bilibili.com/x/passport-login/web/qrcode/poll"
 		client := http.Client{}

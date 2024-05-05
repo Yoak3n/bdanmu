@@ -1,10 +1,15 @@
 package ws
 
 import (
+	"bdanmu/app"
 	"bdanmu/package/logger"
+	"bdanmu/package/model"
+	"encoding/json"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	"net/http"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 var (
@@ -55,23 +60,33 @@ func RegisterClient(c *gin.Context) {
 		go client.SendMessage()
 		go client.ReadMessage()
 		//go client.CloseClient()
-		select {
-		case signal := <-client.CloseSignal:
-			if signal {
-				// maybe invalid address
-				err := conn.Close()
-				if err != nil {
-					return
-				}
+
+		signal := <-client.CloseSignal
+		if signal {
+			// maybe invalid address
+			err := conn.Close()
+			if err != nil {
+				return
 			}
 		}
+
 	}
 }
 
-func WriteMessage(data []byte) {
+func WriteMessage(message *model.Message) {
+	data, err := json.Marshal(message)
+	if err != nil {
+		return
+	}
 	if clients := serverHub.Clients; len(clients) > 0 {
 		for _, client := range clients {
 			client.Message <- data
 		}
+	}
+}
+
+func UpdateUser(user *model.User) {
+	if ctx := app.GetApp(); ctx != nil {
+		runtime.EventsEmit(ctx.Ctx, "user", user)
 	}
 }

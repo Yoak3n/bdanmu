@@ -7,15 +7,14 @@ import (
 )
 
 var (
-	db  *gorm.DB
-	err error
+	db *gorm.DB
 )
 
 func InitDatabase() {
 	switch config.Conf.Database.Type {
 	case "postgres":
 		db = initPostgres(config.Conf.Database.Host, config.Conf.Database.User, config.Conf.Database.Password, config.Conf.Database.Name, config.Conf.Database.Port)
-	case "sqlite":
+	case "sqlite", "sqlite3":
 		db = initSqlite(config.Conf.Database.Name)
 	default:
 		panic("Unsupported database type,please check the configuration")

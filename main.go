@@ -1,43 +1,52 @@
 package main
 
 import (
+	"bdanmu/api/method"
+	"bdanmu/app"
 	"bdanmu/database"
 	"bdanmu/package/logger"
 	"bdanmu/package/util"
-	"bdanmu/service/blivedanmu"
 	"embed"
+	"time"
+
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 //go:embed all:frontend/dist
 var assets embed.FS
 
 func main() {
-	go initBackend()
+	go func() {
+		util.CreateDirNotExists("data/webview")
+		database.InitDatabase()
+	}()
 	appRun()
 }
 
 func appRun() {
-	app := NewApp()
+	a := app.NewApp()
+	go backendStart(a)
 	err := wails.Run(&options.App{
-		Title:  "",
+		Title:  "test",
 		Width:  512,
-		Height: 1000,
+		Height: 900,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
 		Frameless:         true,
 		HideWindowOnClose: true,
-		BackgroundColour:  &options.RGBA{R: 255, G: 255, B: 255, A: 1},
-		OnStartup:         app.startup,
+		DisableResize:     true,
+		BackgroundColour:  &options.RGBA{R: 28, G: 28, B: 28, A: 1},
+		OnStartup:         a.Startup,
 		Bind: []interface{}{
-			app,
+			a,
 		},
 		Windows: &windows.Options{
-			DisableFramelessWindowDecorations: false,
+			// DisableFramelessWindowDecorations: false,
 			//DisableWindowIcon:   true,
 			WebviewUserDataPath: "data/webview",
 		},
@@ -47,15 +56,18 @@ func appRun() {
 	}
 }
 
-func initBackend() {
-	util.CreateDirNotExists("data/webview")
-	go blivedanmu.Start()
-	database.InitDatabase()
-	blivedanmu.InitHub()
-	c := blivedanmu.GetClient()
-	err := c.Start()
-	if err != nil {
-		logger.Logger.Errorln(err)
+func backendStart(app *app.App) {
+
+	for {
+		time.Sleep(1 * time.Second)
+		if app.Ctx != nil {
+			runtime.EventsOn(app.Ctx, "start", func(optionalData ...interface{}) {
+				method.InitBackend()
+				runtime.EventsEmit(app.Ctx, "started", nil)
+			})
+			return
+		}
+
 	}
 
 }

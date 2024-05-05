@@ -70,7 +70,7 @@ func getConfigFromFile() {
 	Conf.Database.User = v.GetString("database.user")
 	Conf.Database.Password = v.GetString("database.password")
 	Conf.Database.Name = v.GetString("database.name")
-
+	v.WatchConfig()
 }
 
 func SetWBIKey(img string, sub string) {
@@ -80,12 +80,12 @@ func SetWBIKey(img string, sub string) {
 	Conf.Auth.SubKey = sub
 	t := time.Now().Unix()
 	Conf.Auth.LastUpdate = t
-	v.Set("wbi.last_update", t)
-	v.WriteConfig()
+	v.Set("auth.last_update", t)
+	v.WatchConfig()
 }
 
 func SetCookieRefresh() {
-	v.Set("cookie", Conf.Auth.Cookie)
-	v.Set("refresh_token", Conf.Auth.RefreshToken)
+	v.Set("auth.cookie", Conf.Auth.Cookie)
+	v.Set("auth.refresh_token", Conf.Auth.RefreshToken)
 	v.WriteConfig()
 }

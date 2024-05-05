@@ -1,17 +1,20 @@
 package blivedanmu
 
 import (
+	"bdanmu/app"
 	"bdanmu/config"
 	"bdanmu/package/logger"
+	"context"
 	"github.com/Akegarasu/blivedm-go/client"
 	"github.com/tidwall/gjson"
 	"sync"
 )
 
 var (
-	cl  *client.Client
-	log = logger.Logger
-	mux = sync.Mutex{}
+	cl     *client.Client
+	log    = logger.Logger
+	mux    = sync.Mutex{}
+	appCtx context.Context
 )
 
 func InitHub() {
@@ -23,6 +26,7 @@ func InitHub() {
 		log.Panic(err)
 	}
 	RegisterHandler()
+	appCtx = app.GetApp().Ctx
 }
 
 func RegisterHandler() {
