@@ -1,10 +1,10 @@
 <template>
-    <div class="danmu-wrapper" v-show="props.danmu != null">
+    <div class="danmu-wrapper" >
         <div class="danmu" >
             <div class="avatar">
-                <n-avatar  class="avatar-img" round size="large"
+                <n-avatar   round :size="45"
                     :src="props.danmu.user.avatar != '' ? props.danmu.user.avatar:'https://i0.hdslb.com/bfs/face/member/noface.jpg'" fallback-src="https://i0.hdslb.com/bfs/face/member/noface.jpg"
-                    :img-props="{alt: props.danmu.user.name, color: 'red' }"
+                    :img-props="{class:'avatar-img', alt: props.danmu.user.name }"
                     :render-placeholder="renderLoading">
                     
                 </n-avatar>
@@ -12,7 +12,7 @@
 
             <div class="content">
                 <div class="info">
-                    <div v-if="props.danmu.user.guard" class="capiton"></div>
+                    <div v-if="props.danmu.user.guard" class="fleet"></div>
                     <Medal v-if="props.danmu.user.medal?.name" :name="props.danmu.user.medal.name"
                         :level="props.danmu.user.medal?.level" />
                     <span class="name">{{ props.danmu.user.name }}</span>
@@ -24,12 +24,12 @@
     </div>
 </template>
 <script setup lang="ts">
-import type { PropType, VNodeChild } from 'vue';
-import { NAvatar } from 'naive-ui'
+import type {PropType, VNodeChild} from 'vue';
+import {h} from 'vue';
+import {NAvatar} from 'naive-ui'
 
-import { Danmu } from './danmu'
+import {Danmu} from './danmu'
 import Medal from '../Medal/index.vue'
-import { h } from 'vue';
 
 const props = defineProps(
     {
@@ -41,8 +41,7 @@ const props = defineProps(
 )
 
 const renderLoading = (): VNodeChild => {
-    const vnode = h('div', { class: 'danmu', style: { width: '100%', height: '100%', background: 'red' } }, 123465)
-    return vnode
+  return h('div', {class: 'danmu', style: {width: '100%', height: '100%', background: 'red'}}, 123465)
 }
 
 </script>
@@ -66,18 +65,19 @@ const renderLoading = (): VNodeChild => {
 
         .avatar {
             width: 15%;
+            height: auto;
+            line-height: 100%;
             text-align: center;
+            padding-top: 10px;
 
-            .avatar-img {
-                // width: 80%;
-                margin: 0 auto;
-            }
         }
 
         .content {
             width: 85%;
             padding: 1%;
-
+            .message{
+              font-size: 16px;
+            }
             .info {
                 // background-color: bisque;
                 border-radius: 5px;
@@ -90,8 +90,7 @@ const renderLoading = (): VNodeChild => {
                 .name {
                     color: rgb(189, 193, 197);
                     font-size: 1rem;
-                    font: bold;
-                    color: 36px;
+                    font-weight: bold;
                 }
             }
 

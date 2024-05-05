@@ -10,10 +10,61 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/rand/v2"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/tidwall/gjson"
 )
+
+func getUserInfoMultiply(uids []int64) (users []*model.User) {
+	users = make([]*model.User, 0)
+	uidsStr := make([]string, 0)
+	for _, uid := range uids {
+		if user := service.ReadUserRecord(uid); user != nil {
+			logger.Logger.Println("use local user info:", user.UID)
+			users = append(users, user)
+		} else {
+			uidsStr = append(uidsStr, strconv.FormatInt(uid, 10))
+		}
+	}
+	if len(uidsStr) == 0 {
+		return users
+	}
+	count := 0
+	targets := strings.Join(uidsStr, ",")
+	logger.Logger.Println(targets)
+	for {
+		res, err := request.Get("https://api.vc.bilibili.com/account/v1/user/cards", fmt.Sprintf("uids=%s", targets))
+		if err != nil {
+			continue
+		}
+		result := gjson.ParseBytes(res)
+		logger.Logger.Println(string(res))
+		if code := result.Get("code"); code.Exists() && code.Int() != 0 {
+			logger.Logger.Debugln("getUserInfoMultiply:", result.Get("message").String())
+			count += 1
+			if count > 5 {
+				return nil
+			}
+			time.Sleep(time.Second)
+			continue
+		}
+		data := result.Get("data").Array()
+		for _, v := range data {
+			u := &model.User{
+				UID:    v.Get("mid").Int(),
+				Avatar: v.Get("face").String(),
+				Name:   v.Get("uname").String(),
+				Sex:    util.TransSex(v.Get("sex").String()),
+			}
+			logger.Logger.Println("create user record:", u.UID)
+			go service.CreateUserRecord(u)
+			users = append(users, u)
+		}
+		return users
+	}
+}
 
 func getUserInfo(uid int64) *model.User {
 	// local database to avoid anti-crawler

@@ -1,0 +1,20 @@
+# first run will log in by scanning qrcode and get cookies
+auth:
+    cookie: xxxxxxxxxxxxxxxx
+    img_key: xxxxxxxxx
+    last_update: xxxxxxxx
+    refresh_token: xxxxxxxx
+    sub_key: xxxxxxxxx
+database:
+    type: sqlite
+    name: bliveDB
+    # if you use postgres need more configuration
+    host: xxxxxx
+    port: xxxx
+    user: xxxxx
+    password: xxxx
+# get user more information
+extension: false
+
+proxy: http://xxxxxxx
+room_id: 6

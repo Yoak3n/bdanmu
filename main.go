@@ -31,17 +31,16 @@ func appRun() {
 	a := app.NewApp()
 	go backendStart(a)
 	err := wails.Run(&options.App{
-		Title:  "test",
+		Title:  "",
 		Width:  512,
 		Height: 900,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
-		Frameless:         true,
-		HideWindowOnClose: true,
-		DisableResize:     true,
-		BackgroundColour:  &options.RGBA{R: 28, G: 28, B: 28, A: 1},
-		OnStartup:         a.Startup,
+		Frameless:        true,
+		DisableResize:    true,
+		BackgroundColour: &options.RGBA{R: 28, G: 28, B: 28, A: 1},
+		OnStartup:        a.Startup,
 		Bind: []interface{}{
 			a,
 		},

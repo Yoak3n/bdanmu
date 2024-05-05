@@ -14,8 +14,8 @@ import (
 
 var (
 	upgrader = websocket.Upgrader{
-		ReadBufferSize:  1024,
-		WriteBufferSize: 1024,
+		ReadBufferSize:  4094,
+		WriteBufferSize: 4096,
 	}
 	serverHub *Server
 )
@@ -54,7 +54,7 @@ func RegisterClient(c *gin.Context) {
 			}
 		}(conn)
 		serverHub.Clients = append(serverHub.Clients, client)
-		if conn == nil {
+		if conn != nil {
 			_ = conn.WriteMessage(websocket.TextMessage, []byte("success"))
 		}
 		go client.SendMessage()

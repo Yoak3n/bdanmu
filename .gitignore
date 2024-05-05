@@ -1,6 +1,6 @@
 *.json
 *.txt
-*.yml
+config.yml
 *.exe
 *.png
 pnpm-lock.yaml
