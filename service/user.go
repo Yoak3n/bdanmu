@@ -3,6 +3,7 @@ package service
 import (
 	"bdanmu/database"
 	"bdanmu/package/model"
+	"gorm.io/gorm/clause"
 	"sync"
 	"time"
 )
@@ -20,6 +21,19 @@ func CreateUserRecord(user *model.User) {
 		database.GetDB().Create(record)
 	}
 	mux.Unlock()
+}
+
+func CreateUserAndUpdateStack(users []*model.User) {
+	records := make([]database.UserTable, 0)
+	for _, user := range users {
+		record := &database.UserTable{}
+		record.User = *user
+		records = append(records, *record)
+	}
+	database.GetDB().Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "uid"}},
+		DoUpdates: clause.AssignmentColumns([]string{"updated_at", "name", "sex", "avatar", "follower_count", "medal_name", "medal_owner_id", "medal_level", "medal_target_id", "guard", "medal_color"}),
+	}).Create(records)
 }
 
 func ReadUserRecord(uid int64) *model.User {

@@ -2,6 +2,8 @@ package app
 
 import (
 	"bdanmu/config"
+	"bdanmu/package/logger"
+	"bdanmu/package/util"
 	"context"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -64,4 +66,12 @@ func waitScanToLogin(key string) {
 		config.Conf.Auth.RefreshToken = csrf
 		config.SetCookieRefresh()
 	}
+}
+
+func (a *App) OpenWindow(uri string) {
+	err := util.OpenUrlOnBrowser(uri)
+	if err != nil {
+		logger.Logger.Errorln(err)
+	}
+
 }

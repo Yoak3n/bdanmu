@@ -2,29 +2,31 @@ package blivedanmu
 
 import (
 	"bdanmu/config"
-	model2 "bdanmu/package/model"
+	"bdanmu/package/model"
 	"bdanmu/package/request"
 	"errors"
 	"fmt"
 	"github.com/tidwall/gjson"
 )
 
-var roomInfo *model2.Room
+var RoomInfo *model.Room
 
-func getRoomInfo(id int) (*model2.Room, error) {
+func getRoomInfo(id int) (*model.Room, error) {
 	res, err := request.Get("https://api.live.bilibili.com/room/v1/Room/get_info", fmt.Sprintf("room_id=%d", config.Conf.RoomId))
 	if err != nil {
 		return nil, err
 	}
-	room := &model2.Room{
+	room := &model.Room{
 		ShortId: id,
-		User:    model2.User{},
+		User:    model.User{},
 	}
 	result := gjson.ParseBytes(res)
 	if result.Get("code").Int() == 0 {
 		room.User.UID = result.Get("data.uid").Int()
 		room.LongId = result.Get("data.room_id").Int()
 		room.FollowerCount = result.Get("data.attention").Int()
+		room.Title = result.Get("data.title").String()
+		room.Cover = result.Get("data.user_cover").String()
 		user := getUserInfo(room.User.UID)
 		if user != nil {
 			room.User = *user

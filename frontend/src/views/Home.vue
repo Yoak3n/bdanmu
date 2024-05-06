@@ -1,9 +1,9 @@
 <template>
   <div class="home-wrapper" >
-    <n-space v-show = "danmus.length > 0" class="super-chat" >
-    </n-space>
-    <n-infinite-scroll  >
- 
+    <div v-show = "danmus.length > 0" class="super-chat" >
+
+    </div>
+    <n-infinite-scroll  class="danmu-box">
       <div v-for="(danmu,index) in danmus"  :id="index ==  danmus.length-1  ?'bottom':'' " :key="danmu.message_id">
         <Transition name="fade" mode="out-in">
           <Danmubox :danmu="danmu" />
@@ -15,7 +15,7 @@
 </template>
 <script setup lang="ts">
 import { ref,onMounted ,nextTick} from 'vue';
-import {NSpace,NInfiniteScroll} from 'naive-ui'
+import {NInfiniteScroll} from 'naive-ui'
 import {useRouter} from  'vue-router'
 
 import Danmubox  from '../components/Danmu/index.vue'
@@ -50,7 +50,7 @@ onMounted(async() => {
 })
 
 const pushDanmu = (danmu:Danmu) => {
-    if (danmus.value.length > 50) {
+    if (danmus.value.length > 200) {
         danmus.value.shift()
     }
     danmus.value.push(danmu)

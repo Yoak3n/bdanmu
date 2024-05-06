@@ -6,6 +6,7 @@ import (
 	"bdanmu/package/logger"
 	"context"
 	"github.com/Akegarasu/blivedm-go/client"
+	"github.com/Akegarasu/blivedm-go/message"
 	"github.com/tidwall/gjson"
 	"sync"
 )
@@ -21,7 +22,7 @@ func InitHub() {
 	cl = client.NewClient(config.Conf.RoomId)
 	cl.SetCookie(config.Conf.Auth.Cookie)
 	var err error
-	roomInfo, err = getRoomInfo(config.Conf.RoomId)
+	RoomInfo, err = getRoomInfo(config.Conf.RoomId)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -36,10 +37,10 @@ func RegisterHandler() {
 		log.Println("欢迎", data)
 	})
 	cl.RegisterCustomEventHandler("INTERACT_WORD", userEntryHandler)
-	cl.RegisterCustomEventHandler("SUPER_CHAT_MESSAGE", func(s string) {
-		result := gjson.Parse(s)
-		log.Println(result.Get("data").String())
+	cl.OnSuperChat(func(s *message.SuperChat) {
+		log.Println(s.Message)
 	})
+
 }
 func GetClient() *client.Client {
 	return cl

@@ -51,6 +51,7 @@ func init() {
 	v.SetDefault("database.type", "sqlite")
 	v.SetDefault("database.name", "bliveDB")
 	getConfigFromFile()
+	v.WatchConfig()
 }
 
 func getConfigFromFile() {
@@ -70,7 +71,7 @@ func getConfigFromFile() {
 	Conf.Database.User = v.GetString("database.user")
 	Conf.Database.Password = v.GetString("database.password")
 	Conf.Database.Name = v.GetString("database.name")
-	v.WatchConfig()
+
 }
 
 func SetWBIKey(img string, sub string) {
@@ -87,5 +88,8 @@ func SetWBIKey(img string, sub string) {
 func SetCookieRefresh() {
 	v.Set("auth.cookie", Conf.Auth.Cookie)
 	v.Set("auth.refresh_token", Conf.Auth.RefreshToken)
-	v.WriteConfig()
+	err := v.WriteConfig()
+	if err != nil {
+		return
+	}
 }

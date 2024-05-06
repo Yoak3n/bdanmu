@@ -6,6 +6,7 @@ import (
 	"bdanmu/database"
 	"bdanmu/package/logger"
 	"bdanmu/package/util"
+	"bdanmu/service/blivedanmu"
 	"embed"
 	"time"
 
@@ -62,7 +63,7 @@ func backendStart(app *app.App) {
 		if app.Ctx != nil {
 			runtime.EventsOn(app.Ctx, "start", func(optionalData ...interface{}) {
 				method.InitBackend()
-				runtime.EventsEmit(app.Ctx, "started", nil)
+				runtime.EventsEmit(app.Ctx, "started", blivedanmu.RoomInfo)
 			})
 			return
 		}
