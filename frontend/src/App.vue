@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {ref,onMounted} from 'vue'
 import {NFloatButton,NIcon,NDrawer,NDrawerContent} from 'naive-ui'
-import {CloseOutline} from '@vicons/ionicons5'
+import {MenuOutline} from '@vicons/ionicons5'
 import NaiveProvider from './components/NaiveProvider/index.vue'
 import Menu from './components/Menu/index.vue'
 import {EventsOnce} from '../wailsjs/runtime'
@@ -26,14 +26,13 @@ onMounted(()=>{
     <router-view/>
   </naive-provider>
   <div >
-    <n-float-button :right="0" :bottom="0" shape="square"  @click="quit" class="quit">
-      <n-icon >
-        <close-outline/>
-      </n-icon>
+    <n-float-button :right="0" :bottom="0" shape="square"  @click="quit" class="menu">
+        <n-icon >
+          <menu-outline />
+        </n-icon>
     </n-float-button>
-    <n-drawer v-model:show="drawer_open" 
-
-    style="background-color: rgba(240,240,240,0.8);"  width="50%">
+    <n-drawer v-model:show="drawer_open"
+    style="background-color: rgba(240,240,240,0.5);margin: 1rem 0"  width="50%">
       <n-drawer-content     body-content-style="padding: 0;">
         <Menu />
       </n-drawer-content>
@@ -43,14 +42,28 @@ onMounted(()=>{
 </template>
 
 <style scoped lang="less">
-.quit{
-  background-color: transparent;
-  color:transparent;
+.menu{
+  color:rgba(28,28,28,1);
+  background-color:rgba(28,28,28,1);
 }
-.quit:hover{
-  visibility: visible;
-  color:rgb(28,28,28);
-  background-color: white;
+.menu:hover{
+  animation-duration: .5s;
+  animation-name: fadeIn;
+  background-color: rgba(240,240,240,1);
 }
+.menu:hover div{
+  animation-duration: .5s;
+  animation-name: fadeIn;
+  background-color: rgba(240,240,240,1);
+}
+@keyframes  fadeIn{
+  from {
+    background-color:rgba(28,28,28,0);
+  }
+  to{
+    background-color: rgba(240,240,240,1);
+  }
+}
+
 
 </style>

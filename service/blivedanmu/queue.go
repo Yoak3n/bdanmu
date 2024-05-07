@@ -66,7 +66,7 @@ func collectUserId() {
 		select {
 		case user := <-Queue.User:
 			sendIds = append(sendIds, user)
-			if atomic.LoadInt32(&flag) > 0 || len(sendIds) > 20 {
+			if atomic.LoadInt32(&flag) > 0 || len(sendIds) > 10 {
 				atomic.StoreInt32(&flag, 0)
 				go func(ids []int64) {
 					users := getUserInfoMultiply(ids)

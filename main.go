@@ -61,8 +61,9 @@ func backendStart(app *app.App) {
 	for {
 		time.Sleep(1 * time.Second)
 		if app.Ctx != nil {
-			runtime.EventsOn(app.Ctx, "start", func(optionalData ...interface{}) {
+			runtime.EventsOnce(app.Ctx, "start", func(optionalData ...interface{}) {
 				method.InitBackend()
+				runtime.WindowSetTitle(app.Ctx, blivedanmu.RoomInfo.Title)
 				runtime.EventsEmit(app.Ctx, "started", blivedanmu.RoomInfo)
 			})
 			return

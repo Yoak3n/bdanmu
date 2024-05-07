@@ -54,7 +54,6 @@ const pushDanmu = (danmu:Danmu) => {
         danmus.value.shift()
     }
     danmus.value.push(danmu)
-
     nextTick(() => {
       const bottom = document.getElementById("bottom")
       bottom?.scrollIntoView({ behavior: "smooth", block: "center", inline: "end" });
