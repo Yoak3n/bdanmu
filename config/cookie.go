@@ -224,6 +224,8 @@ func getCorrespondPath(ts int64) (string, error) {
 
 func getCsrf() string {
 	reg := regexp.MustCompile(`bili_jct=([0-9a-zA-Z]+);`)
-	csrf := reg.FindStringSubmatch(Conf.Auth.Cookie)[1]
-	return csrf
+	if result := reg.FindStringSubmatch(Conf.Auth.Cookie); len(result) > 1 {
+		return result[1]
+	}
+	return ""
 }

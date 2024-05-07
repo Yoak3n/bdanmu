@@ -14,8 +14,8 @@ const quit = ()=> {
 }
 
 onMounted(()=>{
-  EventsOnce('started',function (room_id:number) {
-    localStorage.setItem('room_id',room_id.toString())
+  EventsOnce('started',function (room) {
+    localStorage.setItem('room_id',room.short_id)
   })
 })
 
@@ -31,8 +31,10 @@ onMounted(()=>{
         <close-outline/>
       </n-icon>
     </n-float-button>
-    <n-drawer v-model:show="drawer_open" style="background-color: rgba(240,240,240,0.8);"  width="50%">
-      <n-drawer-content>
+    <n-drawer v-model:show="drawer_open" 
+
+    style="background-color: rgba(240,240,240,0.8);"  width="50%">
+      <n-drawer-content     body-content-style="padding: 0;">
         <Menu />
       </n-drawer-content>
     </n-drawer>

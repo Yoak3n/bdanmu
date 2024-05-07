@@ -20,7 +20,7 @@ import {useRouter} from  'vue-router'
 
 import Danmubox  from '../components/Danmu/index.vue'
 import type {Danmu} from '../components/Danmu/danmu'
-import type {User} from '../components/user'
+import type {User} from '../components/types'
 import {EventsOff, EventsOn} from '../../wailsjs/runtime'
 import {NeedLogin} from '../../wailsjs/go/app/App'
 import { EventsEmit } from '../../wailsjs/runtime';
@@ -29,7 +29,7 @@ const $router = useRouter()
 let danmus =  ref<Array<Danmu>>([])
 onMounted(async() => {
   const cookie = localStorage.getItem("cookie")
-  if (!cookie) {
+  if (!cookie || cookie == "") {
     await $router.push("/login")
   }else{
     const need = await NeedLogin(cookie)
@@ -80,9 +80,11 @@ const updateDanmu = (user:User) => {
 .home-wrapper {
   height: 100%;
   width: 100%;
+  margin: 0 2rem;
+  padding: 0 2rem;
   .danmu-box{
     height: 100%;
     overflow-y:scroll;
   }
 }
-</style>
+</style>../components/types

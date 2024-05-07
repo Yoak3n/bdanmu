@@ -7,7 +7,6 @@ import (
 	"context"
 	"github.com/Akegarasu/blivedm-go/client"
 	"github.com/Akegarasu/blivedm-go/message"
-	"github.com/tidwall/gjson"
 	"sync"
 )
 
@@ -32,10 +31,6 @@ func InitHub() {
 
 func RegisterHandler() {
 	cl.OnDanmaku(messageHandler)
-	cl.RegisterCustomEventHandler("WELCOME", func(s string) {
-		data := gjson.Get(s, "data").String()
-		log.Println("欢迎", data)
-	})
 	cl.RegisterCustomEventHandler("INTERACT_WORD", userEntryHandler)
 	cl.OnSuperChat(func(s *message.SuperChat) {
 		log.Println(s.Message)

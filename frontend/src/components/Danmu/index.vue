@@ -1,12 +1,12 @@
 <template>
-    <div class="danmu-wrapper" >
-        <div class="danmu" >
+    <div class="danmu-wrapper">
+        <div class="danmu">
             <div class="avatar">
-                <n-avatar   round :size="45"
-                    :src="props.danmu.user.avatar != '' ? props.danmu.user.avatar:'https://i0.hdslb.com/bfs/face/member/noface.jpg'" fallback-src="https://i0.hdslb.com/bfs/face/member/noface.jpg"
-                    :img-props="{class:'avatar-img', alt: props.danmu.user.name }"
-                    :render-placeholder="renderLoading">
-                    
+                <n-avatar round :size="45"
+                    :src="props.danmu.user.avatar != '' ? props.danmu.user.avatar : 'https://i0.hdslb.com/bfs/face/member/noface.jpg'"
+                    fallback-src="https://i0.hdslb.com/bfs/face/member/noface.jpg"
+                    :img-props="{ class: 'avatar-img', alt: props.danmu.user.name }">
+
                 </n-avatar>
             </div>
 
@@ -18,17 +18,16 @@
                     <span class="name">{{ props.danmu.user.name }}</span>
                 </div>
                 <div class="message" v-html="props.danmu.content">
-                  </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 <script setup lang="ts">
-import type {PropType, VNodeChild} from 'vue';
-import {h} from 'vue';
-import {NAvatar} from 'naive-ui'
+import type { PropType } from 'vue';
+import { NAvatar } from 'naive-ui'
 
-import {Danmu} from './danmu'
+import { Danmu } from './danmu'
 import Medal from '../Medal/index.vue'
 
 const props = defineProps(
@@ -40,9 +39,6 @@ const props = defineProps(
     }
 )
 
-const renderLoading = (): VNodeChild => {
-  return h('div', {class: 'danmu', style: {width: '100%', height: '100%', background: 'red'}}, 123465)
-}
 
 </script>
 
@@ -75,9 +71,11 @@ const renderLoading = (): VNodeChild => {
         .content {
             width: 85%;
             padding: 1%;
-            .message{
-              font-size: 16px;
+
+            .message {
+                font-size: 16px;
             }
+
             .info {
                 // background-color: bisque;
                 border-radius: 5px;

@@ -4,13 +4,15 @@ import (
 	"bdanmu/api/router/ws"
 	"bdanmu/config"
 	"bdanmu/consts"
+	"bdanmu/package/logger"
 	"bdanmu/package/model"
 	"fmt"
+	"strings"
+
 	"github.com/Akegarasu/blivedm-go/message"
 	"github.com/google/uuid"
 	"github.com/tidwall/gjson"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
-	"strings"
 )
 
 func messageHandler(msg *message.Danmaku) {
@@ -28,6 +30,7 @@ func messageHandler(msg *message.Danmaku) {
 			}
 		}
 	}
+	logger.Logger.Println(msg.Content)
 	uid := int64(msg.Sender.Uid)
 	user := &model.User{
 		UID:   uid,
