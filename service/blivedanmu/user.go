@@ -20,7 +20,22 @@ import (
 func getUserInfoMultiply(uids []int64) (users []*model.User) {
 	users = make([]*model.User, 0)
 	uidsStr := make([]string, 0)
-	for _, uid := range uids {
+	// 简单去重，因为 uid 重复的概率极低，所以这里不考虑性能
+	newArr := make([]int64, 0)
+	for i := 0; i < len(uids); i++ {
+		repeat := false
+		for j := i + 1; j < len(uids); j++ {
+			if uids[i] == uids[j] {
+				repeat = true
+				break
+			}
+		}
+		if !repeat {
+			newArr = append(newArr, uids[i])
+		}
+	}
+
+	for _, uid := range newArr {
 		if user := service.ReadUserRecord(uid); user != nil {
 			users = append(users, user)
 		} else {
@@ -38,7 +53,6 @@ func getUserInfoMultiply(uids []int64) (users []*model.User) {
 			continue
 		}
 		result := gjson.ParseBytes(res)
-		logger.Logger.Println(string(res))
 		if code := result.Get("code"); code.Exists() && code.Int() != 0 {
 			logger.Logger.Debugln("getUserInfoMultiply:", result.Get("message").String())
 			count += 1
@@ -53,13 +67,13 @@ func getUserInfoMultiply(uids []int64) (users []*model.User) {
 			u := &model.User{
 				UID:    v.Get("mid").Int(),
 				Avatar: v.Get("face").String(),
-				Name:   v.Get("uname").String(),
+				Name:   v.Get("name").String(),
 				Sex:    util.TransSex(v.Get("sex").String()),
 			}
-			logger.Logger.Println("create user record:", u.UID)
-			go service.CreateUserRecord(u)
 			users = append(users, u)
 		}
+		// 一点冗余更新
+		go service.CreateUserAndUpdateStack(users)
 		return users
 	}
 }
@@ -93,7 +107,7 @@ func getUserInfo(uid int64) *model.User {
 			Sex:           util.TransSex(data.Get("card.sex").String()),
 			FollowerCount: data.Get("follower").Int(),
 		}
-		go service.UpdateUserRecord(u)
+		go service.CreateUserRecord(u)
 		return u
 	}
 }
@@ -144,7 +158,7 @@ func getUserInfoWithWBI(uid int64) *model.Medal {
 
 // getMedalTargetUserInfo 通过勋章递归获取用户信息
 func getMedalTargetUserInfo(targetId int64) {
-	if roomInfo.User.UID != 0 && targetId == roomInfo.User.UID {
+	if RoomInfo.User.UID != 0 && targetId == RoomInfo.User.UID {
 		return
 	}
 	u := getUserInfo(targetId)

@@ -1,8 +1,8 @@
 package blivedanmu
 
 import (
+	"bdanmu/api/router/ws"
 	"bdanmu/package/model"
-	"math/rand"
 	"sync/atomic"
 	"time"
 )
@@ -10,8 +10,6 @@ import (
 type QueueChan struct {
 	Medal chan int64
 	User  chan int64
-	Users chan []int64
-	ids   []int64
 	Reply chan map[int64]*model.User
 }
 
@@ -27,10 +25,8 @@ func SendUserMsg(user int64) {
 
 func initQueue() {
 	Queue = &QueueChan{
-		Medal: make(chan int64),
-		User:  make(chan int64),
-		ids:   make([]int64, 0),
-		Users: make(chan []int64), // 用户IDs
+		Medal: make(chan int64, 1000),
+		User:  make(chan int64, 1000),
 		Reply: make(chan map[int64]*model.User),
 	}
 }
@@ -43,24 +39,18 @@ func Start() {
 
 }
 func handler() {
-	go func() {
-		for {
-			r := rand.Intn(3)
-			time.Sleep(time.Second * time.Duration(r))
-			Queue.Users <- Queue.ids
-			Queue.ids = Queue.ids[0:0]
-		}
-	}()
 	for {
 		select {
 		case target := <-Queue.Medal:
 			go getMedalTargetUserInfo(target)
-		case user := <-Queue.User:
-			Queue.ids = append(Queue.ids, user)
+		case reply := <-Queue.Reply:
+			for _, u := range reply {
+				ws.UpdateUser(u)
+			}
 		}
-
 	}
 }
+
 func collectUserId() {
 	sendIds := make([]int64, 0)
 	timer := time.NewTimer(time.Second * 2)
@@ -74,13 +64,12 @@ func collectUserId() {
 	}()
 	for {
 		select {
-		case users := <-Queue.Users:
-			sendIds = append(sendIds, users...)
+		case user := <-Queue.User:
+			sendIds = append(sendIds, user)
 			if atomic.LoadInt32(&flag) > 0 || len(sendIds) > 20 {
 				atomic.StoreInt32(&flag, 0)
-				go func() {
-					users := getUserInfoMultiply(sendIds)
-					sendIds = sendIds[0:0]
+				go func(ids []int64) {
+					users := getUserInfoMultiply(ids)
 					if len(users) > 0 {
 						for _, user := range users {
 							reply := make(map[int64]*model.User)
@@ -88,9 +77,8 @@ func collectUserId() {
 							Queue.Reply <- reply
 						}
 					}
-
-				}()
-
+				}(sendIds)
+				sendIds = sendIds[0:0]
 			}
 
 		}

@@ -1,9 +1,9 @@
 *.txt
 config.yml
 *.exe
-*.png
 pnpm-lock.yaml
 
+test/
 build/
 data/
 .vscode/

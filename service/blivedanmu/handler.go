@@ -6,13 +6,11 @@ import (
 	"bdanmu/consts"
 	"bdanmu/package/model"
 	"fmt"
+	"github.com/Akegarasu/blivedm-go/message"
+	"github.com/google/uuid"
 	"github.com/tidwall/gjson"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"strings"
-	"time"
-
-	"github.com/Akegarasu/blivedm-go/message"
-	"github.com/google/uuid"
 )
 
 func messageHandler(msg *message.Danmaku) {
@@ -48,26 +46,30 @@ func messageHandler(msg *message.Danmaku) {
 
 	go SendUserMsg(uid)
 
-	go func(u *model.User) {
-		for {
-			reply := <-Queue.Reply
-			userData, ok := reply[uid]
-			if !ok {
-				Queue.Reply <- reply
-			} else {
-				// 成功获得额外用户信息
-				if userData == nil {
-					break
-				}
-				u.Avatar = userData.Avatar
-				u.Sex = userData.Sex
-				u.FollowerCount = userData.FollowerCount
-				go ws.UpdateUser(u)
-				break
-			}
-			time.Sleep(time.Second)
-		}
-	}(user)
+	//go func(u *model.User) {
+	//	count := 0
+	//	for {
+	//		reply := <-Queue.Reply
+	//		userData, ok := reply[uid]
+	//		if !ok && userData == nil {
+	//			Queue.Reply <- reply
+	//			if count > 10 {
+	//				log.Println("用户信息更新失败", u.Name)
+	//				break
+	//			}
+	//			count += 1
+	//		} else {
+	//			// 成功获得额外用户信息
+	//			u.Avatar = userData.Avatar
+	//			u.Sex = userData.Sex
+	//			u.FollowerCount = userData.FollowerCount
+	//			log.Println("用户信息更新成功", u.Name, u.Avatar)
+	//			go ws.UpdateUser(u)
+	//			break
+	//		}
+	//		time.Sleep(time.Second)
+	//	}
+	//}(user)
 
 	danMu := &model.DanMu{
 		Content:   msg.Content,
