@@ -9,7 +9,7 @@ import (
 	"bdanmu/service"
 	"encoding/json"
 	"fmt"
-	"math/rand/v2"
+	"math/rand"
 	"strconv"
 	"strings"
 	"time"
@@ -22,7 +22,6 @@ func getUserInfoMultiply(uids []int64) (users []*model.User) {
 	uidsStr := make([]string, 0)
 	for _, uid := range uids {
 		if user := service.ReadUserRecord(uid); user != nil {
-			logger.Logger.Println("use local user info:", user.UID)
 			users = append(users, user)
 		} else {
 			uidsStr = append(uidsStr, strconv.FormatInt(uid, 10))
@@ -33,7 +32,6 @@ func getUserInfoMultiply(uids []int64) (users []*model.User) {
 	}
 	count := 0
 	targets := strings.Join(uidsStr, ",")
-	logger.Logger.Println(targets)
 	for {
 		res, err := request.Get("https://api.vc.bilibili.com/account/v1/user/cards", fmt.Sprintf("uids=%s", targets))
 		if err != nil {
@@ -123,7 +121,7 @@ func getUserInfoWithWBI(uid int64) *model.Medal {
 				log.Errorf("get user %d medal failed", uid)
 				return nil
 			}
-			r := rand.IntN(3) + 2
+			r := rand.Intn(3) + 2
 			err = config.RefreshCookie()
 			if err != nil {
 				log.Errorln(err)

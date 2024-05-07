@@ -2,7 +2,7 @@ package blivedanmu
 
 import (
 	"bdanmu/package/model"
-	"math/rand/v2"
+	"math/rand"
 	"sync/atomic"
 	"time"
 )
@@ -45,7 +45,7 @@ func Start() {
 func handler() {
 	go func() {
 		for {
-			r := rand.IntN(3)
+			r := rand.Intn(3)
 			time.Sleep(time.Second * time.Duration(r))
 			Queue.Users <- Queue.ids
 			Queue.ids = Queue.ids[0:0]
