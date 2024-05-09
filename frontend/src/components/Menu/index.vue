@@ -1,5 +1,13 @@
 <template>
   <n-list hoverable clickable class="menu-wrapper">
+    <n-list-item class="menu-item" @click="()=>{$router.push('/')}">
+      <template #prefix>
+        <n-icon>
+          <barcode />
+        </n-icon>
+      </template>
+      弹幕流
+    </n-list-item>
     <n-list-item class="menu-item" @click="JumpToLiveRoom">
       <template #prefix>
         <n-icon>
@@ -17,14 +25,13 @@
       </template>
       直播间信息
     </n-list-item>
-    <n-list-item class="menu-item">
+    <n-list-item class="menu-item" @click="()=>{$router.push('/setting')}">
       <template #prefix>
         <n-icon>
           <settings />
         </n-icon>
       </template>
-
-      修改
+      设置
     </n-list-item>
     <n-list-item class="menu-item" @click="AppQuit">
       <template #prefix>
@@ -43,7 +50,8 @@ import {
   BookOutline as BookIcon,
   PersonOutline as PersonIcon,
   LogOutOutline as Logout,
-  SettingsOutline as Settings
+  SettingsOutline as Settings,
+  BarcodeOutline as Barcode
 } from '@vicons/ionicons5'
 
 import {JumpToLiveRoom ,AppQuit}from './mixin'
@@ -57,21 +65,18 @@ import {JumpToLiveRoom ,AppQuit}from './mixin'
   font-size: large;
   background-color: transparent;
   color: rgb(240,240,240);
-  :hover+div{
-    background-color: green;
-  }
   .menu-item{
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    :hover+div{
-        background-color: red;
-        color: #000;
-      }
-
-
+    border-radius: 0;
+  }
+  .menu-item:hover{
+    background-color: rgba(240, 240, 240, 0.5);
+    // color: rgb(28,28,28);
+      
   }
 }
 </style>
