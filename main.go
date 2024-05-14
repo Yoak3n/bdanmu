@@ -46,7 +46,7 @@ func appRun() {
 			a,
 		},
 		Windows: &windows.Options{
-			// DisableFramelessWindowDecorations: false,
+			DisableFramelessWindowDecorations: false,
 			//DisableWindowIcon:   true,
 			WebviewUserDataPath: "data/webview",
 		},

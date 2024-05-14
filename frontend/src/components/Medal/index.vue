@@ -1,9 +1,9 @@
 <template>
-    <div class="medal" :style="{backgroundColor:color}">
+    <div class="medal" :style="{background:color}">
         <span class="medal-name">
             {{ medal_name }}
         </span>
-        <span class="medal-level" :style="{ color: color }">
+        <span class="medal-level" :style="{ color: level>20?level<29? '#444':selectColor(level-20):color }">
             {{ props.level }}
         </span>
     </div>
@@ -24,6 +24,8 @@ const props = defineProps({
 let color = ref<danmuLevelColor>()
 let medal_name= ref(props.name)
 color.value = selectColor(props.level)
+console.log(color.value);
+
 if (props.name.length > 3) {
     medal_name.value = props.name.slice(0,3)
 }

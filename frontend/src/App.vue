@@ -7,6 +7,7 @@ import Menu from './components/Menu/index.vue'
 import { EventsOnce } from '../wailsjs/runtime'
 
 let drawer_open = ref(false)
+let room_title = ref('')
 
 const open_drawer = () => {
   // Quit()
@@ -16,6 +17,8 @@ const open_drawer = () => {
 onMounted(() => {
   EventsOnce('started', function (room) {
     localStorage.setItem('room_id', room.short_id)
+    localStorage.setItem('room_title', room.title)
+    room_title.value = room.title
   })
 })
 
@@ -37,7 +40,7 @@ onMounted(() => {
       <n-drawer-content body-content-style="padding: 0;">
         <template #header>
           <div style="color:rgb(240,240,240);">
-            直播间标题  
+          {{ room_title }}
           </div>
         </template>
         <Menu />
