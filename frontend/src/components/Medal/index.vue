@@ -24,7 +24,6 @@ const props = defineProps({
 let color = ref<danmuLevelColor>()
 let medal_name= ref(props.name)
 color.value = selectColor(props.level)
-console.log(color.value);
 
 if (props.name.length > 3) {
     medal_name.value = props.name.slice(0,3)

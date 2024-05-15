@@ -74,7 +74,8 @@ func (Formatter) Format(entry *logrus.Entry) ([]byte, error) {
 	} else {
 		buf = entry.Buffer
 	}
-	fileValue := fmt.Sprintf("%s:%d", path.Base(entry.Caller.File), entry.Caller.Line)
+	dirPath := util.GetFileDir(path.Dir(entry.Caller.File))
+	fileValue := fmt.Sprintf("%s/%s:%d", dirPath, path.Base(entry.Caller.File), entry.Caller.Line)
 	fmt.Fprintf(buf, "[%s][%s]%s %s\n", level, entry.Time.Format("1-2|15:04:05"), fileValue, entry.Message)
 	return buf.Bytes(), nil
 }

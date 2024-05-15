@@ -1,6 +1,9 @@
 package util
 
-import "os"
+import (
+	"os"
+	"strings"
+)
 
 func CreateDirNotExists(dir string) {
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
@@ -10,4 +13,11 @@ func CreateDirNotExists(dir string) {
 			return
 		}
 	}
+}
+
+func GetFileDir(filePath string) string {
+	if strings.HasSuffix(filePath, "/") {
+		filePath, _ = strings.CutSuffix(filePath, "/")
+	}
+	return filePath[strings.LastIndex(filePath, "/")+1:]
 }

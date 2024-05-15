@@ -8,7 +8,6 @@ import (
 	"bdanmu/package/util"
 	"bdanmu/service/blivedanmu"
 	"embed"
-	"time"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -57,9 +56,7 @@ func appRun() {
 }
 
 func backendStart(app *app.App) {
-
 	for {
-		time.Sleep(1 * time.Second)
 		if app.Ctx != nil {
 			runtime.EventsOnce(app.Ctx, "start", func(optionalData ...interface{}) {
 				method.InitBackend()

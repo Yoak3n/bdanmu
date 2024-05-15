@@ -33,6 +33,14 @@
       </template>
       设置
     </n-list-item>
+    <n-list-item class="menu-item" @click="HideWindow">
+      <template #prefix>
+      <n-icon>
+        <caret-down />
+      </n-icon>
+      </template>
+      隐藏
+    </n-list-item>
     <n-list-item class="menu-item" @click="AppQuit">
       <template #prefix>
       <n-icon>
@@ -51,10 +59,11 @@ import {
   PersonOutline as PersonIcon,
   LogOutOutline as Logout,
   SettingsOutline as Settings,
-  BarcodeOutline as Barcode
+  BarcodeOutline as Barcode,
+  CaretDownCircleOutline as CaretDown
 } from '@vicons/ionicons5'
 
-import {JumpToLiveRoom ,AppQuit}from './mixin'
+import {JumpToLiveRoom ,AppQuit,HideWindow}from './mixin'
 
 
 </script>
@@ -68,15 +77,13 @@ import {JumpToLiveRoom ,AppQuit}from './mixin'
   .menu-item{
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     border-radius: 0;
   }
   .menu-item:hover{
-    background-color: rgba(240, 240, 240, 0.5);
-    // color: rgb(28,28,28);
-      
+    background-color: rgba(0,0,0, 0.5);
+    box-shadow: 0 0 10px 2px #918f8f;
+    transition: all 0.3s;
   }
+      
 }
 </style>

@@ -5,9 +5,10 @@ import (
 	"bdanmu/config"
 	"bdanmu/package/logger"
 	"context"
+	"sync"
+
 	"github.com/Akegarasu/blivedm-go/client"
 	"github.com/Akegarasu/blivedm-go/message"
-	"sync"
 )
 
 var (
@@ -19,6 +20,7 @@ var (
 
 func InitHub() {
 	cl = client.NewClient(config.Conf.RoomId)
+	log.Println("connecting room:", cl.RoomID)
 	cl.SetCookie(config.Conf.Auth.Cookie)
 	var err error
 	RoomInfo, err = getRoomInfo(config.Conf.RoomId)

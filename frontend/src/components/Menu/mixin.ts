@@ -1,5 +1,5 @@
 import {OpenWindow} from '../../../wailsjs/go/app/App'
-import {Quit} from '../../../wailsjs/runtime'
+import {Quit,WindowMinimise} from '../../../wailsjs/runtime'
 export const JumpToLiveRoom =(e:MouseEvent)=> {
     e.preventDefault()
     const room_id:string = localStorage.getItem('room_id')!
@@ -7,5 +7,10 @@ export const JumpToLiveRoom =(e:MouseEvent)=> {
 }
 export const AppQuit = ()=>{
     Quit()
+}
+
+export const HideWindow =(e:MouseEvent)=> {
+    e.preventDefault()
+    WindowMinimise()
 }
 

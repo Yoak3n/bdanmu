@@ -21,7 +21,7 @@ import {useRouter} from  'vue-router'
 import Danmubox  from '../components/Danmu/index.vue'
 import type {Danmu} from '../components/Danmu/danmu'
 import type {User} from '../components/types'
-import {EventsOff, EventsOn} from '../../wailsjs/runtime'
+import { EventsOn} from '../../wailsjs/runtime'
 import {NeedLogin} from '../../wailsjs/go/app/App'
 import { EventsEmit } from '../../wailsjs/runtime';
 
@@ -36,17 +36,13 @@ onMounted(async() => {
     if (need) {
       localStorage.removeItem("cookie")
       localStorage.removeItem("token")
-      await $router.push("/login")
+      $router.push("/login")
     }else{
-      EventsOff("danmu","user")
       EventsOn("danmu", pushDanmu)
       EventsOn("user", updateDanmu)
       EventsEmit("start")
     }
   }
-
-  
-
 })
 
 const pushDanmu = (danmu:Danmu) => {

@@ -4,8 +4,10 @@ import { NFloatButton, NIcon, NDrawer, NDrawerContent } from 'naive-ui'
 import { MenuOutline } from '@vicons/ionicons5'
 import NaiveProvider from './components/NaiveProvider/index.vue'
 import Menu from './components/Menu/index.vue'
-import { EventsOnce } from '../wailsjs/runtime'
+import { EventsOn} from '../wailsjs/runtime'
+import { useRoute } from 'vue-router'
 
+const $route = useRoute()
 let drawer_open = ref(false)
 let room_title = ref('')
 
@@ -15,7 +17,7 @@ const open_drawer = () => {
 }
 
 onMounted(() => {
-  EventsOnce('started', function (room) {
+  EventsOn('started', function (room) {
     localStorage.setItem('room_id', room.short_id)
     localStorage.setItem('room_title', room.title)
     room_title.value = room.title
@@ -26,7 +28,12 @@ onMounted(() => {
 
 <template>
   <naive-provider>
-    <router-view />
+    <router-view v-slot="{ Component }">
+      <keep-alive>
+        <component :is="Component" v-if="$route.meta.keepAlive" />
+      </keep-alive>
+      <component :is="Component" v-if="!$route.meta.keepAlive"/>
+    </router-view>
   </naive-provider>
   <div>
     <n-float-button :right="0" :bottom="0" shape="square" @click="open_drawer" class="menu">
@@ -38,8 +45,8 @@ onMounted(() => {
       style="background-color: rgba(30,30,30,0.6);margin: 3rem 0;border: 1px solid rgba(240,240,240,0.6);border-radius:  10px 0 0 10px"
       width="40%">
       <n-drawer-content body-content-style="padding: 0;">
-        <template #header>
-          <div style="color:rgb(240,240,240);">
+        <template #header >
+          <div style="color:rgb(240,240,240);" onselectstart="return false" unselectable="on">
           {{ room_title }}
           </div>
         </template>
