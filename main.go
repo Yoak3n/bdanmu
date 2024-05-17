@@ -3,6 +3,7 @@ package main
 import (
 	"bdanmu/api/method"
 	"bdanmu/app"
+	"bdanmu/config"
 	"bdanmu/database"
 	"bdanmu/package/logger"
 	"bdanmu/package/util"
@@ -29,7 +30,8 @@ func main() {
 
 func appRun() {
 	a := app.NewApp()
-	go backendStart(a)
+	blivedanmu.Start()
+	go waitForBackendStart(a)
 	err := wails.Run(&options.App{
 		Title:  "",
 		Width:  512,
@@ -55,9 +57,16 @@ func appRun() {
 	}
 }
 
-func backendStart(app *app.App) {
+// 由于初期架构问题，只能在主函数中注册事件才能暂时避免循环引用，丑陋的写法
+func waitForBackendStart(app *app.App) {
 	for {
 		if app.Ctx != nil {
+			runtime.EventsOn(app.Ctx, "change", func(id ...interface{}) {
+				config.SetRoomId(id[0].(int))
+				method.ChangeBackend()
+				runtime.WindowSetTitle(app.Ctx, blivedanmu.RoomInfo.Title)
+				runtime.EventsEmit(app.Ctx, "started", blivedanmu.RoomInfo)
+			})
 			runtime.EventsOnce(app.Ctx, "start", func(optionalData ...interface{}) {
 				method.InitBackend()
 				runtime.WindowSetTitle(app.Ctx, blivedanmu.RoomInfo.Title)

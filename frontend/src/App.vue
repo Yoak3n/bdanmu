@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { NFloatButton, NIcon, NDrawer, NDrawerContent } from 'naive-ui'
+import { NFloatButton, NIcon, NDrawer, NDrawerContent} from 'naive-ui'
 import { MenuOutline } from '@vicons/ionicons5'
 import NaiveProvider from './components/NaiveProvider/index.vue'
 import Menu from './components/Menu/index.vue'
@@ -11,10 +11,6 @@ const $route = useRoute()
 let drawer_open = ref(false)
 let room_title = ref('')
 
-const open_drawer = () => {
-  // Quit()
-  drawer_open.value = !drawer_open.value
-}
 
 onMounted(() => {
   EventsOn('started', function (room) {
@@ -36,7 +32,7 @@ onMounted(() => {
     </router-view>
   </naive-provider>
   <div>
-    <n-float-button :right="0" :bottom="0" shape="square" @click="open_drawer" class="menu">
+    <n-float-button :right="0" :bottom="0" shape="square" @click="drawer_open = !drawer_open" class="menu">
       <n-icon>
         <menu-outline />
       </n-icon>

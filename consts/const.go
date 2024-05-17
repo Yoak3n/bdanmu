@@ -2,6 +2,6 @@ package consts
 
 const (
 	SUPER_CHAT = iota
-	UserEntry
-	Danmu
+	USER_ENTRY
+	DAN_MU
 )

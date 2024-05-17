@@ -1,6 +1,7 @@
 package config
 
 import (
+	"bdanmu/package/logger"
 	"time"
 
 	"github.com/spf13/viper"
@@ -92,4 +93,15 @@ func SetCookieRefresh() {
 	if err != nil {
 		return
 	}
+}
+
+func SetRoomId(id int) error {
+	v.Set("room_id", id)
+	Conf.RoomId = id
+	err := v.WriteConfig()
+	if err != nil {
+		logger.Logger.Errorln(err)
+		return err
+	}
+	return nil
 }

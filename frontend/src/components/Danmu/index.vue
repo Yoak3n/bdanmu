@@ -26,7 +26,6 @@
 <script setup lang="ts">
 import type { PropType } from 'vue';
 import { NAvatar } from 'naive-ui'
-
 import { Danmu } from './danmu'
 import Medal from '../Medal/index.vue'
 
@@ -55,6 +54,7 @@ const props = defineProps(
 
 .danmu-wrapper {
     .danmu {
+        padding: 0 .5rem;
         display: flex;
         overflow-wrap: break-word;
         width: 100%;
@@ -73,7 +73,9 @@ const props = defineProps(
             padding: 1%;
 
             .message {
+                display: flex;
                 font-size: 16px;
+                align-items: center;
             }
 
             .info {

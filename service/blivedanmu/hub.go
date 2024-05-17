@@ -8,7 +8,6 @@ import (
 	"sync"
 
 	"github.com/Akegarasu/blivedm-go/client"
-	"github.com/Akegarasu/blivedm-go/message"
 )
 
 var (
@@ -34,9 +33,7 @@ func InitHub() {
 func RegisterHandler() {
 	cl.OnDanmaku(messageHandler)
 	cl.RegisterCustomEventHandler("INTERACT_WORD", userEntryHandler)
-	cl.OnSuperChat(func(s *message.SuperChat) {
-		log.Println(s.Message)
-	})
+	cl.OnSuperChat(superChatHandler)
 
 }
 func GetClient() *client.Client {

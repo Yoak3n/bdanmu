@@ -57,7 +57,6 @@ func (a *App) LoginBilibili() string {
 }
 
 func waitScanToLogin(key string) {
-	// runtime.EventsListen(context.Background(), nil)
 	config.VerifyLogin(key)
 	logged, _, cookieStr, csrf := config.IsLogin()
 	if logged {

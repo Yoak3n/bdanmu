@@ -49,31 +49,6 @@ func messageHandler(msg *message.Danmaku) {
 
 	go SendUserMsg(uid)
 
-	//go func(u *model.User) {
-	//	count := 0
-	//	for {
-	//		reply := <-Queue.Reply
-	//		userData, ok := reply[uid]
-	//		if !ok && userData == nil {
-	//			Queue.Reply <- reply
-	//			if count > 10 {
-	//				log.Println("用户信息更新失败", u.Name)
-	//				break
-	//			}
-	//			count += 1
-	//		} else {
-	//			// 成功获得额外用户信息
-	//			u.Avatar = userData.Avatar
-	//			u.Sex = userData.Sex
-	//			u.FollowerCount = userData.FollowerCount
-	//			log.Println("用户信息更新成功", u.Name, u.Avatar)
-	//			go ws.UpdateUser(u)
-	//			break
-	//		}
-	//		time.Sleep(time.Second)
-	//	}
-	//}(user)
-
 	danMu := &model.DanMu{
 		Content:   msg.Content,
 		Sender:    *user,
@@ -82,19 +57,26 @@ func messageHandler(msg *message.Danmaku) {
 	}
 	go runtime.EventsEmit(appCtx, "danmu", danMu)
 	m := &model.Message{
-		Type: consts.Danmu,
+		Type: consts.DAN_MU,
 		Data: danMu,
 	}
-
-	go ws.WriteMessage(m)
+	ws.WriteMessage(m)
 
 }
 
 func userEntryHandler(s string) {
 	user := NewUserInformation(s)
 	m := &model.Message{
-		Type: consts.UserEntry,
+		Type: consts.USER_ENTRY,
 		Data: user,
+	}
+	ws.WriteMessage(m)
+}
+
+func superChatHandler(s *message.SuperChat) {
+	m := &model.Message{
+		Type: consts.SUPER_CHAT,
+		Data: s,
 	}
 	ws.WriteMessage(m)
 }

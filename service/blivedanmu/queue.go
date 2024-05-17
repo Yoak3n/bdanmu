@@ -23,19 +23,14 @@ func SendUserMsg(user int64) {
 	Queue.User <- user
 }
 
-func initQueue() {
+func Start() {
 	Queue = &QueueChan{
 		Medal: make(chan int64, 1000),
 		User:  make(chan int64, 1000),
 		Reply: make(chan map[int64]*model.User),
 	}
-}
-
-func Start() {
-	initQueue()
 	go handler()
 	go collectUserId()
-	select {}
 
 }
 func handler() {
