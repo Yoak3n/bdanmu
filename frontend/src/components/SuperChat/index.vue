@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import {NSpace} from 'naive-ui'
+
 </script>
 
 <template>
-  <n-space>
-    
-  </n-space>
+ <div class="super-chat-wrapper">
+
+ </div>
 </template>
 
 <style scoped lang="less">

@@ -30,7 +30,7 @@ func messageHandler(msg *message.Danmaku) {
 			}
 		}
 	}
-	logger.Logger.Println(msg.Content)
+	logger.Logger.Traceln(msg.Content)
 	uid := int64(msg.Sender.Uid)
 	user := &model.User{
 		UID:   uid,
@@ -74,9 +74,29 @@ func userEntryHandler(s string) {
 }
 
 func superChatHandler(s *message.SuperChat) {
+	superChat := &model.SuperChat{
+		User: model.User{
+			UID:    int64(s.Uid),
+			Name:   s.UserInfo.Uname,
+			Avatar: s.UserInfo.Face,
+			Guard:  s.UserInfo.GuardLevel > 0,
+			Medal: &model.Medal{
+				Name:     s.MedalInfo.MedalName,
+				OwnerID:  int64(s.Uid),
+				Level:    s.MedalInfo.MedalLevel,
+				TargetID: int64(s.MedalInfo.TargetId),
+			},
+		},
+		RoomID:    config.Conf.RoomId,
+		MessageID: uuid.NewString(),
+		Content:   s.Message,
+		Timestamp: s.Ts,
+		EndTime:   s.EndTime,
+	}
 	m := &model.Message{
 		Type: consts.SUPER_CHAT,
-		Data: s,
+		Data: superChat,
 	}
+	go runtime.EventsEmit(appCtx, "superChat", superChat)
 	ws.WriteMessage(m)
 }

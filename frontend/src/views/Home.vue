@@ -1,8 +1,10 @@
 <template>
   <div class="home-wrapper">
-    <div v-show="superchats.length > 0" class="super-chat">
-
-    </div>
+    <n-flex v-show="superChats.length > 0" class="super-chat">
+      <div v-for="superChat in superChats" :key="superChat.message_id">
+        {{superChat.content}}
+      </div>
+    </n-flex>
     <n-infinite-scroll class="danmu-box">
       <div v-for="(danmu, index) in danmus" :id="index == danmus.length - 1 ? 'bottom' : ''" :key="danmu.message_id">
         <Transition name="fade" mode="out-in">
@@ -15,7 +17,7 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from 'vue';
-import { NInfiniteScroll, useMessage } from 'naive-ui'
+import { NInfiniteScroll, NFlex,useMessage } from 'naive-ui'
 import { useRouter } from 'vue-router'
 
 import Danmubox from '../components/Danmu/index.vue'
@@ -30,7 +32,23 @@ import { EventsEmit } from '../../wailsjs/runtime';
 const $router = useRouter()
 const $message = useMessage()
 let danmus = ref<Array<Danmu>>([])
-let superchats = ref<Array<SuperChat>>([])
+let superChats = ref<Array<SuperChat>>([
+    {
+      room_id:42062,
+      message_id:"123123",
+      content:"testnihaoma",
+      timestamp:0,
+      end_time:0,
+      price:30,
+      user:{
+        name:"hello",
+        uid:0,
+        avatar:"",
+        sex:0,
+        guard:false
+      }
+    }
+    ])
 onMounted(async () => {
   EventsOn('started', function (room) {
     $message.create("已连接房间：" + room.short_id, { duration: 5000 })
@@ -43,10 +61,16 @@ onMounted(async () => {
     if (need) {
       localStorage.removeItem("cookie")
       localStorage.removeItem("token")
-      $router.push("/login")
+      await $router.push("/login")
     } else {
       EventsOn("danmu", pushDanmu)
       EventsOn("user", updateDanmu)
+      EventsOn("superChat", (super_chat: SuperChat) => {
+        superChats.value.push(super_chat)
+        setTimeout(() => {
+          superChats.value.splice(superChats.value.findIndex((super_chat) => super_chat.end_time == super_chat.end_time), 1)
+        },super_chat.end_time-super_chat.timestamp)
+      })
       EventsEmit("start")
     }
   }

@@ -36,11 +36,7 @@ func getUserInfoMultiply(uids []int64) (users []*model.User) {
 	}
 
 	for _, uid := range newArr {
-		if user := service.ReadUserRecord(uid); user != nil {
-			users = append(users, user)
-		} else {
-			uidsStr = append(uidsStr, strconv.FormatInt(uid, 10))
-		}
+		uidsStr = append(uidsStr, strconv.FormatInt(uid, 10))
 	}
 	if len(uidsStr) == 0 {
 		return users

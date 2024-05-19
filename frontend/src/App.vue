@@ -42,7 +42,7 @@ onMounted(() => {
       width="40%">
       <n-drawer-content body-content-style="padding: 0;">
         <template #header >
-          <div style="color:rgb(240,240,240);" onselectstart="return false" unselectable="on">
+          <div style="color:rgb(240,240,240);cursor: default;user-select: none" onselectstart="return false" unselectable="on">
           {{ room_title }}
           </div>
         </template>

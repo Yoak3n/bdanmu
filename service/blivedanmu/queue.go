@@ -3,6 +3,7 @@ package blivedanmu
 import (
 	"bdanmu/api/router/ws"
 	"bdanmu/package/model"
+	"bdanmu/service"
 	"sync/atomic"
 	"time"
 )
@@ -60,20 +61,27 @@ func collectUserId() {
 	for {
 		select {
 		case user := <-Queue.User:
-			sendIds = append(sendIds, user)
-			if atomic.LoadInt32(&flag) > 0 || len(sendIds) > 10 {
-				atomic.StoreInt32(&flag, 0)
-				go func(ids []int64) {
-					users := getUserInfoMultiply(ids)
-					if len(users) > 0 {
-						for _, user := range users {
-							reply := make(map[int64]*model.User)
-							reply[user.UID] = user
-							Queue.Reply <- reply
+			if localUser := service.ReadUserRecord(user); localUser != nil {
+				reply := make(map[int64]*model.User)
+				reply[user] = localUser
+				Queue.Reply <- reply
+			} else {
+				sendIds = append(sendIds, user)
+				if atomic.LoadInt32(&flag) > 0 || len(sendIds) > 10 {
+					atomic.StoreInt32(&flag, 0)
+					go func(ids []int64) {
+						users := getUserInfoMultiply(ids)
+						if len(users) > 0 {
+							for _, user := range users {
+								reply := make(map[int64]*model.User)
+								reply[user.UID] = user
+								Queue.Reply <- reply
+							}
 						}
-					}
-				}(sendIds)
-				sendIds = sendIds[0:0]
+					}(sendIds)
+					sendIds = sendIds[0:0]
+				}
+
 			}
 
 		}
