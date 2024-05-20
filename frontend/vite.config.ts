@@ -8,6 +8,6 @@ export default defineConfig({
     __VUE_PROD_HYDRATION_MISMATCH_DETAILS__:"true",
   },
   server: {
-    port: 3000
+    port: 5173
   }
 })

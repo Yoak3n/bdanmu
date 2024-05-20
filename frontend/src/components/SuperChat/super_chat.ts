@@ -14,7 +14,7 @@ export interface SuperChat{
 export function computeSuperChatBackground(price :number):string{
     switch (price){
         case 30:
-            return "#ff0000"
+            return "#7497CD"
         case 50:
             return "#F8D766"
     }
