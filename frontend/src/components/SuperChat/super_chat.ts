@@ -11,12 +11,12 @@ export interface SuperChat{
     price:number
 }
 
-function computeSuperChatBackground(price :number):string{
+export function computeSuperChatBackground(price :number):string{
     switch (price){
         case 30:
-            return "bg-[#F8D766]"
+            return "#ff0000"
         case 50:
-            return "bg-[#F8D766]"
+            return "#F8D766"
     }
-    return "aa"
+    return ""
 }

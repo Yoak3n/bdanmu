@@ -1,11 +1,14 @@
 <template>
-  <div class="home-wrapper">
-    <n-flex v-show="superChats.length > 0" class="super-chat">
-      <div v-for="superChat in superChats" :key="superChat.message_id">
-        {{superChat.content}}
-      </div>
-    </n-flex>
-    <n-infinite-scroll class="danmu-box">
+  <div class="home-wrapper" ref="containerRef" >
+    <n-affix :trigger-top="10"  :listen-to="() => containerRef" class="super-chat-box">
+        <div v-show="superChats.length > 0" >
+          <div v-for="superChat in superChats" :key="superChat.message_id">
+            <SuperChatbox :data="superChat"/>
+          </div>
+        </div>
+      </n-affix>
+    <n-infinite-scroll class="danmu-box"  >
+
       <div v-for="(danmu, index) in danmus" :id="index == danmus.length - 1 ? 'bottom' : ''" :key="danmu.message_id">
         <Transition name="fade" mode="out-in">
           <Danmubox :danmu="danmu" />
@@ -17,38 +20,39 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from 'vue';
-import { NInfiniteScroll, NFlex,useMessage } from 'naive-ui'
+import { NAffix, NInfiniteScroll, useMessage } from 'naive-ui'
 import { useRouter } from 'vue-router'
 
 import Danmubox from '../components/Danmu/index.vue'
+import SuperChatbox from '../components/SuperChat/index.vue'
 import type { Danmu } from '../components/Danmu/danmu'
-import type{ SuperChat } from '../components/SuperChat/super_chat';
+import type { SuperChat } from '../components/SuperChat/super_chat';
 import type { User } from '../components/types'
 import { EventsOn } from '../../wailsjs/runtime'
 import { NeedLogin } from '../../wailsjs/go/app/App'
 import { EventsEmit } from '../../wailsjs/runtime';
 
-
+const containerRef = ref<HTMLElement | undefined>(undefined)
 const $router = useRouter()
 const $message = useMessage()
 let danmus = ref<Array<Danmu>>([])
 let superChats = ref<Array<SuperChat>>([
-    {
-      room_id:42062,
-      message_id:"123123",
-      content:"testnihaoma",
-      timestamp:0,
-      end_time:0,
-      price:30,
-      user:{
-        name:"hello",
-        uid:0,
-        avatar:"",
-        sex:0,
-        guard:false
-      }
+  {
+    room_id: 42062,
+    message_id: "123123",
+    content: "testnihaoma",
+    timestamp: 0,
+    end_time: 0,
+    price: 30,
+    user: {
+      name: "hello",
+      uid: 0,
+      avatar: "",
+      sex: 0,
+      guard: false
     }
-    ])
+  }
+])
 onMounted(async () => {
   EventsOn('started', function (room) {
     $message.create("已连接房间：" + room.short_id, { duration: 5000 })
@@ -69,7 +73,7 @@ onMounted(async () => {
         superChats.value.push(super_chat)
         setTimeout(() => {
           superChats.value.splice(superChats.value.findIndex((super_chat) => super_chat.end_time == super_chat.end_time), 1)
-        },super_chat.end_time-super_chat.timestamp)
+        }, super_chat.end_time - super_chat.timestamp)
       })
       EventsEmit("start")
     }
@@ -106,11 +110,15 @@ const updateDanmu = (user: User) => {
   height: 100%;
   width: 100%;
   // margin: 0 2rem;
-
+  .super-chat-box{
+    width: 100%;
+    z-index: 999999;
+  }
   .danmu-box {
     height: 100%;
     width: 100%;
     overflow-y: scroll;
   }
 }
+
 </style>../components/types
