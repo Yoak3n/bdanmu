@@ -92,6 +92,7 @@ func superChatHandler(s *message.SuperChat) {
 		Content:   s.Message,
 		Timestamp: s.Ts,
 		EndTime:   s.EndTime,
+		Price:     s.Price,
 	}
 	m := &model.Message{
 		Type: consts.SUPER_CHAT,

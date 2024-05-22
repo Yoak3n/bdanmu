@@ -1,13 +1,14 @@
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
+
 html{
   margin: 0;
   padding: 0;
   width: 512px;
   height: 900px;
   color:white;
-  background-color: rgb(28, 28, 28);
+  background-color: @background-color;
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
@@ -22,7 +23,7 @@ html::-webkit-scrollbar{
   position: fixed;
   top: 0;
   z-index: 10000;
-  border-radius: 0.5rem 0.5rem 0 0  ;
+  /* border-radius: 0.5rem 0.5rem 0 0  ; */
 }
 #header:hover,#header:active{
   background-color: rgba(240, 255, 255, 0.2);
