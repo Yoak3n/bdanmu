@@ -3,13 +3,8 @@ package util
 import (
 	"os/exec"
 	"runtime"
+	"syscall"
 )
-
-var commands = map[string]string{
-	"windows": "start",
-	"darwin":  "open",
-	"linux":   "xdg-open",
-}
 
 func OpenUrlOnBrowser(uri string) error {
 	var cmd string
@@ -25,5 +20,7 @@ func OpenUrlOnBrowser(uri string) error {
 		cmd = "xdg-open"
 	}
 	args = append(args, uri)
-	return exec.Command(cmd, args...).Start()
+	c := exec.Command(cmd, args...)
+	c.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+	return c.Start()
 }

@@ -18,7 +18,10 @@ func CreateUserRecord(user *model.User) {
 	if result := database.GetDB().Where("uid = ?", user.UID).Find(record); result.RowsAffected > 0 && time.Since(record.UpdatedAt).Hours() > 24*5 {
 		UpdateUserRecord(user)
 	} else if result.RowsAffected <= 0 {
-		database.GetDB().Create(record)
+		database.GetDB().Clauses(clause.OnConflict{
+			Columns:   []clause.Column{{Name: "uid"}},
+			DoUpdates: clause.AssignmentColumns([]string{"updated_at", "name", "sex", "avatar", "follower_count", "medal_name", "medal_owner_id", "medal_level", "medal_target_id", "guard", "medal_color"}),
+		}).Create(record)
 	}
 	mux.Unlock()
 }

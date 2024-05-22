@@ -1,20 +1,19 @@
 <template>
-  <div class="home-wrapper" ref="containerRef" >
-
-    <n-affix :trigger-top="0"  :listen-to="() => containerRef" class="super-chat-box">
-      <div v-show="superChats.length > 0" >
-          <div v-for="superChat in superChats" :key="superChat.message_id">
-            <SuperChatbox :data="superChat"/>
-          </div>
+  <div class="home-wrapper" ref="containerRef">
+    <n-affix :trigger-top="0" :listen-to="() => containerRef" class="super-chat-box">
+      <Transition name="sc">
+        <div v-if="superChats.length > 0" >
+          <SuperChatbox v-for="superChat in superChats" :key="superChat.message_id" :data="superChat"/>
         </div>
-        <button @click="testSuperChat">test</button>
-      </n-affix>
-    <n-infinite-scroll class="danmu-box"  >
+      </Transition>
+
+      <!-- <button @click="testSuperChat">test</button> -->
+
+    </n-affix>
+    <n-infinite-scroll class="danmu-box">
 
       <div v-for="(danmu, index) in danmus" :id="index == danmus.length - 1 ? 'bottom' : ''" :key="danmu.message_id">
-        <Transition name="fade" mode="out-in">
-          <Danmubox :danmu="danmu" />
-        </Transition>
+        <Danmubox :danmu="danmu" />
       </div>
 
     </n-infinite-scroll>
@@ -30,7 +29,7 @@ import SuperChatbox from '../components/SuperChat/index.vue'
 import type { Danmu } from '../components/Danmu/danmu'
 import type { SuperChat } from '../components/SuperChat/super_chat';
 import type { User } from '../components/types'
-import { EventsOn } from '../../wailsjs/runtime'
+import { EventsOn,EventsOff } from '../../wailsjs/runtime'
 import { NeedLogin } from '../../wailsjs/go/app/App'
 import { EventsEmit } from '../../wailsjs/runtime';
 
@@ -58,6 +57,10 @@ let superChats = ref<Array<SuperChat>>([
 onMounted(async () => {
   EventsOn('started', function (room) {
     $message.create("已连接房间：" + room.short_id, { duration: 5000 })
+    EventsOff("danmu","user","superChat")
+    EventsOn("danmu", pushDanmu)
+    EventsOn("user", updateDanmu)
+    EventsOn("superChat", pushSuperChat)
   })
   const cookie = localStorage.getItem("cookie")
   if (!cookie || cookie == "") {
@@ -77,17 +80,35 @@ onMounted(async () => {
   }
 })
 
-const testSuperChat = () => {
-  pushSuperChat({room_id: 6154037,message_id: '6522809',content: '猪播完美预测自己第一个死，这就是鹅鸭杀高玩吗',timestamp: 1677069035,end_time: 1677069095,price: 30,user: {name: '界原虚',uid: 294094150,avatar: 'https://i1.hdslb.com/bfs/face/7a11b48e0a3055e220fa8b4c7d938cd4bcac2577.jpg',sex: -1,guard: true,}})
-}
+// const testSuperChat = () => {
+//   let index = 0
+//   index += 1
+
+
+//   return pushSuperChat({
+//     room_id: 6154037,
+//     message_id: '6522809',
+//     content: '猪播完美预测自己第一个死，这就是鹅鸭杀高玩吗',
+//     timestamp: 1677069035 + index,
+//     end_time: 1677069095 + index,
+//     price: 30,
+//     user: {
+//       name: '界原虚',
+//       uid: 294094150,
+//       avatar: 'https://i1.hdslb.com/bfs/face/7a11b48e0a3055e220fa8b4c7d938cd4bcac2577.jpg',
+//       sex: -1,
+//       guard: true,
+//     }
+//   })
+// }
 
 const pushSuperChat = (super_chat: SuperChat) => {
-        superChats.value.push(super_chat)
-        setTimeout(() => {
-          superChats.value.splice(superChats.value.findIndex((sc) => sc.end_time == super_chat.end_time), 1)
-          console.log("delete")
-        }, (super_chat.end_time - super_chat.timestamp)*1000)
-      }
+  superChats.value.push(super_chat)
+  setTimeout(() => {
+    superChats.value.splice(superChats.value.findIndex((sc) => sc.end_time == super_chat.end_time), 1)
+    console.log("delete")
+  }, (super_chat.end_time - super_chat.timestamp) * 1000)
+}
 
 const pushDanmu = (danmu: Danmu) => {
   if (danmus.value.length > 200) {
@@ -118,16 +139,27 @@ const updateDanmu = (user: User) => {
 .home-wrapper {
   height: 100%;
   width: 100%;
+
   // margin: 0 2rem;
-  .super-chat-box{
+  .super-chat-box {
     width: 100%;
     z-index: 9;
   }
+
   .danmu-box {
     height: 100%;
     width: 100%;
     overflow-y: scroll;
   }
-}
 
+}
+.sc-leave-active {
+  transition: opacity 1s ease;
+}
+.sc-leave-from{
+  opacity: 1;
+}
+.sc-leave-to{
+  opacity: 0;
+}
 </style>../components/types

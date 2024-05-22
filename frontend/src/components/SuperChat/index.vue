@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, PropType, onMounted } from 'vue';
-import { NAvatar, NProgress } from 'naive-ui';
+import { ref, PropType} from 'vue';
+import { NAvatar,NEllipsis} from 'naive-ui';
 import { SuperChat, computeSuperChatBackground } from './super_chat'
+import ProcessBar from '../ProcessBar/index.vue'
 const props = defineProps({
   data: {
     type: Object as PropType<SuperChat>,
@@ -11,43 +12,32 @@ const props = defineProps({
 const superChatRef = ref<undefined | HTMLElement>(undefined)
 const color = computeSuperChatBackground(props.data.price)
 const long = props.data.end_time - props.data.timestamp
-const height = Math.floor(props.data.content.length / 28 + 1) * 30
-
-let percentage = ref(100)
-onMounted(() => {
-  let count = 0
-  let bar = setInterval(() => {
-    count += 1
-    // percentage.value = 100 - (count / (long*100) *100)
-    percentage.value = 100 - (count / long)
-    if (count >= long*100) {
-      clearInterval(bar)
-    }
-  }, 10)
-})
-
+let height = 30
 </script>
 
 <template>
   <div class="super-chat-wrapper" ref="superChatRef">
-    <div class="super-chat-box">
+      <div class="super-chat-box" v-if="props.data != null">
       <div class="info">
         <n-avatar round :size="45" :src="props.data.user.avatar"
           fallback-src="https://i0.hdslb.com/bfs/face/member/noface.jpg"
           :img-props="{ class: 'avatar-img', alt: props.data.user.name }">
         </n-avatar>
-        <div class="name">{{ props.data.user.name }}</div>
+        <div class="name">
+          <a :href="'https://space.bilibili.com/' + props.data.user.uid">
+          {{ props.data.user.name }}
+          </a>
+        </div>
       </div>
       <div class="progress-bar">
-        <n-progress :percentage="percentage" :fill-border-radius="0" :border-radius="0" :height="height" type="line"
-          :color="color" rail-color="rgba(28, 28, 28,0.8)" :show-indicator="false">
-        </n-progress>
-        <div class="content">{{ props.data.content }}</div>
+        <process-bar :fill-color="color" :height="height" back-color="rgba(28,28,28,0.7)" :progress-time="long" :width="512" />
+        <div class="content">
+          <n-ellipsis :line-clamp="1"  style="max-width: 450px">
+            {{ props.data.content }}
+          </n-ellipsis>
+        </div>
       </div>
-
-
     </div>
-
   </div>
 
 </template>
@@ -58,8 +48,8 @@ onMounted(() => {
   display: flex;
   align-items: center;
   min-height: 2rem;
-  color: rgb(28, 28, 28);
-
+  color: rgba(28, 28, 28,1);
+  animation: in 1s ease-in-out;
   .super-chat-box {
     display: flex;
     flex-flow: row wrap;
@@ -75,6 +65,10 @@ onMounted(() => {
       .name {
         font-size: 1.2rem;
         margin-left: 1rem;
+        a{
+          text-decoration: none;
+          color: rgb(28, 28, 28);
+        }
       }
     }
 
@@ -98,5 +92,17 @@ onMounted(() => {
 
     }
   }
+  @keyframes in {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to{
+    opacity: 1;
+  }
+  
 }
+}
+
+
 </style>

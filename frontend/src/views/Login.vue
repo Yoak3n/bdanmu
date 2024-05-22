@@ -42,8 +42,7 @@ const auth = (cookie: string,token:string) => {
   localStorage.setItem("cookie", cookie)
   localStorage.setItem("token", token)
   logined.value = true
-  $message.success("登录成功",{
-    keepAliveOnHover: true})
+  $message.success("登录成功",{keepAliveOnHover: true})
 }
 
 </script>

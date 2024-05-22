@@ -4,6 +4,7 @@ import { NFloatButton, NIcon, NDrawer, NDrawerContent} from 'naive-ui'
 import { MenuOutline } from '@vicons/ionicons5'
 import NaiveProvider from './components/NaiveProvider/index.vue'
 import Menu from './components/Menu/index.vue'
+import {SyncAuth} from '../wailsjs/go/app/App'
 import { EventsOn} from '../wailsjs/runtime'
 import { useRoute } from 'vue-router'
 
@@ -12,7 +13,10 @@ let drawer_open = ref(false)
 let room_title = ref('')
 
 
-onMounted(() => {
+onMounted(async() => {
+  const auth = await SyncAuth()
+  localStorage.setItem('cookie', auth[0])
+  localStorage.setItem('token', auth[1])
   EventsOn('started', function (room) {
     localStorage.setItem('room_id', room.short_id)
     localStorage.setItem('room_title', room.title)

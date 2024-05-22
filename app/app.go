@@ -74,3 +74,7 @@ func (a *App) OpenWindow(uri string) {
 	}
 
 }
+
+func (a *App) SyncAuth() []string {
+	return []string{config.Conf.Auth.Cookie, config.Conf.Auth.RefreshToken} //config.Conf.Auth.Cookie, config.Conf.Auth.RefreshToken
+}

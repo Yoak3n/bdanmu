@@ -7,4 +7,5 @@ test/
 build/
 data/
 .vscode/
+.idea/
 wailsjs/
