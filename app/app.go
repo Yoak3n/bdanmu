@@ -2,8 +2,6 @@ package app
 
 import (
 	"bdanmu/config"
-	"bdanmu/package/logger"
-	"bdanmu/package/util"
 	"context"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -67,12 +65,9 @@ func waitScanToLogin(key string) {
 	}
 }
 
-func (a *App) OpenWindow(uri string) {
-	err := util.OpenUrlOnBrowser(uri)
-	if err != nil {
-		logger.Logger.Errorln(err)
-	}
-
+func (a *App) HideToTray() {
+	runtime.Hide(a.Ctx)
+	go registerTray()
 }
 
 func (a *App) SyncAuth() []string {

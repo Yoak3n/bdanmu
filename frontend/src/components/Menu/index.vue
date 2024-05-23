@@ -39,7 +39,7 @@
         <caret-down />
       </n-icon>
       </template>
-      隐藏
+      隐藏至托盘
     </n-list-item>
     <n-list-item class="menu-item" @click="AppQuit">
       <template #prefix>

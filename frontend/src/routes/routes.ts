@@ -5,8 +5,14 @@ export default <RouteRecordRaw[]> [
         path: "/",
         name: "Home",
         component: () => import("../views/Home.vue"),
+    },
+    {
+        path: "/dashboard",
+        name: "Dashboard",
+        component: () => import("../views/Dashboard.vue"),
         meta: {
             keepAlive: true, // 需要被缓存
+            requireAuth: true, // 需要登录
         }
     },{
         path: "/login",
