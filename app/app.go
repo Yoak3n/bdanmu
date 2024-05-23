@@ -45,7 +45,6 @@ func (a *App) NeedLogin(cookie string) bool {
 	} else {
 		return true
 	}
-
 }
 
 func (a *App) LoginBilibili() string {

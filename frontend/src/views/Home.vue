@@ -10,7 +10,6 @@ import { NeedLogin } from '../../wailsjs/go/app/App'
 
 const $router = useRouter()
 onMounted(async () => {
-
     const cookie = localStorage.getItem("cookie")
     if (!cookie || cookie == "") {
         await $router.push("/login")
@@ -25,6 +24,4 @@ onMounted(async () => {
     }
 }
 )
-
-
 </script>

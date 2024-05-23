@@ -1,12 +1,9 @@
 package config
 
 import (
-	"github.com/skip2/go-qrcode"
 	"github.com/tidwall/gjson"
 	"io"
-	"log"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 )
@@ -17,34 +14,6 @@ func getLoginUrl() (string, string) {
 	return loginUrl, loginKey
 }
 
-func login() (string, string) {
-	for {
-		loginKey, loginUrl := getLoginKeyAndLoginUrl()
-		fp, err := os.OpenFile("qrcode.png", os.O_WRONLY|os.O_CREATE, 0644)
-		if err != nil {
-			panic(err)
-		}
-		var png []byte
-		png, err = qrcode.Encode(loginUrl, qrcode.Medium, 256)
-		if err != nil {
-			panic(err)
-		}
-		_, err = fp.Write(png)
-		if err != nil {
-			panic(err)
-		}
-		fp.Close()
-		VerifyLogin(loginKey)
-		logged, data, cookieStr, csrf := IsLogin()
-		if logged {
-			_ = os.Remove("qrcode.png")
-			uname := data.Get("data.uname").String()
-			log.Println(uname + "已登录")
-			return cookieStr, csrf
-		}
-
-	}
-}
 func IsLogin(cookie ...string) (bool, gjson.Result, string, string) {
 	uri := "https://api.bilibili.com/x/web-interface/nav"
 	csrf := getCsrf()

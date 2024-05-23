@@ -1,24 +1,13 @@
 <template>
   <div class="login-wrapper">
-    <n-form>
-      <n-form-item label="请使用哔哩哔哩App扫码登录">
-        <n-card v-if="text !== ''" class="qrcode">
-          <n-qr-code :value="text"  :size="250"/>
-        </n-card>
-      </n-form-item>
-
-      <n-form-item >
-        <n-button :disabled="!logined" class="login-button" type="primary" shape="square" @click="start">
-          启动
-        </n-button>
-      </n-form-item>
-    </n-form>
-
+    <n-card v-if="text !== ''" class="qrcode" title="请使用哔哩哔哩App扫码登录">
+      <n-qr-code :value="text"  :size="250" color="#f69"/>
+    </n-card>
   </div>
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { NCard, NButton, NQrCode, NForm, NFormItem,useMessage } from 'naive-ui';
+import { NCard, NQrCode,useMessage } from 'naive-ui';
 import {useRouter} from  'vue-router'
 
 import { EventsOnce} from '../../wailsjs/runtime'
@@ -52,13 +41,10 @@ const auth = (cookie: string,token:string) => {
 
 <style scoped lang="less">
 .login-wrapper {
+  color: #fff;
+  margin-top: 3rem;
   .qrcode {
     width: 63%;
-    margin: 0 auto;
-  }
-
-  .login-button{
-    width: 50%;
     margin: 0 auto;
   }
 

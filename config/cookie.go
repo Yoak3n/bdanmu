@@ -33,13 +33,6 @@ JNrRuoEUXpabUzGB8QIDAQAB
 `
 )
 
-func AuthBilibili() {
-	if ok, _, _, _ := IsLogin(); ok {
-		return
-	}
-	login()
-}
-
 func LoginFromFrontend() (string, string) {
 	return getLoginUrl()
 }
