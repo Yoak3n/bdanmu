@@ -1,6 +1,7 @@
 {
   "$schema": "https://wails.io/schemas/config.v2.json",
   "name": "bdanmu",
+  "version": "2",
   "outputfilename": "bdanmu",
   "devServer": "localhost:5174",
   "frontend:install": "pnpm install",
@@ -10,5 +11,10 @@
   "author": {
     "name": "Yoake",
     "email": "3354590676@qq.com"
+  },
+  "info": {
+    "productName": "bdanmu",
+    "description": "一个简单易用的bilibili弹幕机",
+    "productVersion": "0.0.1"
   }
 }

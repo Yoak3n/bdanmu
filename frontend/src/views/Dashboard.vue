@@ -2,8 +2,8 @@
   <div class="home-wrapper" ref="containerRef">
     <n-affix :trigger-top="0" :listen-to="() => containerRef" class="super-chat-box">
       <Transition name="sc">
-        <div v-if="superChats.length > 0" >
-          <SuperChatbox v-for="superChat in superChats" :key="superChat.message_id" :data="superChat"/>
+        <div v-if="superChats.length > 0">
+          <SuperChatbox v-for="superChat in superChats" :key="superChat.message_id" :data="superChat" />
         </div>
       </Transition>
 
@@ -28,7 +28,7 @@ import SuperChatbox from '../components/SuperChat/index.vue'
 import type { Danmu } from '../components/Danmu/danmu'
 import type { SuperChat } from '../components/SuperChat/super_chat';
 import type { User } from '../components/types'
-import { EventsOn,EventsOff } from '../../wailsjs/runtime'
+import { EventsOn,EventsOnce, EventsOff } from '../../wailsjs/runtime'
 
 import { EventsEmit } from '../../wailsjs/runtime';
 
@@ -54,20 +54,29 @@ let superChats = ref<Array<SuperChat>>([
   // }
 ])
 onMounted(async () => {
-  if ($route.query.from == "login"){
-    EventsOn('started', function (room) {
-    $message.create("已连接房间：" + room.short_id, { duration: 5000 })
-    EventsOff("danmu","user","superChat")
-    EventsOn("danmu", pushDanmu)
-    EventsOn("user", updateDanmu)
-    EventsOn("superChat", pushSuperChat)
-  })
-  }
-    EventsOn("danmu", pushDanmu)
-    EventsOn("user", updateDanmu)
-    EventsOn("superChat", pushSuperChat)
-    EventsEmit("start")
-  
+  if ($route.query.from == "login") {
+    EventsOnce('started', function (room) {
+      $message.create("已连接房间：" + room.short_id, { duration: 5000 })
+      EventsOff("danmu", "user", "superChat")
+      EventsOn("danmu", pushDanmu)
+      EventsOn("user", updateDanmu)
+      EventsOn("superChat", pushSuperChat)
+    })
+  }else if ($route.query.from == "setting") {
+    danmus.value = []
+    EventsOnce('started', function (room) {
+      $message.create("已连接房间：" + room.short_id, { duration: 5000 })
+        EventsOff("danmu", "user", "superChat")
+        EventsOn("danmu", pushDanmu)
+        EventsOn("user", updateDanmu)
+        EventsOn("superChat", pushSuperChat)
+    })
+}
+  EventsOn("danmu", pushDanmu)
+  EventsOn("user", updateDanmu)
+  EventsOn("superChat", pushSuperChat)
+  EventsEmit("start")
+
 })
 
 // const testSuperChat = () => {
@@ -143,13 +152,16 @@ const updateDanmu = (user: User) => {
   }
 
 }
+
 .sc-leave-active {
   transition: opacity 1s ease;
 }
-.sc-leave-from{
+
+.sc-leave-from {
   opacity: 1;
 }
-.sc-leave-to{
+
+.sc-leave-to {
   opacity: 0;
 }
 </style>../components/types

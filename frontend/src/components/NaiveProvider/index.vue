@@ -31,7 +31,6 @@ const NaiveProviderContent = defineComponent({
 </script>
 
 <template>
-
     <NLoadingBarProvider>
       <NDialogProvider>
         <NNotificationProvider>

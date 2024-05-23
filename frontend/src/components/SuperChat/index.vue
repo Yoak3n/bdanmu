@@ -2,6 +2,7 @@
 import { ref, PropType} from 'vue';
 import { NAvatar,NEllipsis} from 'naive-ui';
 import { SuperChat, computeSuperChatBackground } from './super_chat'
+import { BrowserOpenURL } from '../../../wailsjs/runtime/runtime';
 import ProcessBar from '../ProcessBar/index.vue'
 const props = defineProps({
   data: {
@@ -19,14 +20,15 @@ let height = 30
   <div class="super-chat-wrapper" ref="superChatRef">
       <div class="super-chat-box" v-if="props.data != null">
       <div class="info">
-        <n-avatar round :size="45" :src="props.data.user.avatar"
+        <a href="javascript:void(0)" @click="BrowserOpenURL('https://space.bilibili.com/' + props.data.user.uid)">
+          <n-avatar round :size="45" :src="props.data.user.avatar"
           fallback-src="https://i0.hdslb.com/bfs/face/member/noface.jpg"
           :img-props="{ class: 'avatar-img', alt: props.data.user.name }">
         </n-avatar>
+        </a>
+
         <div class="name">
-          <a :href="'https://space.bilibili.com/' + props.data.user.uid">
           {{ props.data.user.name }}
-          </a>
         </div>
       </div>
       <div class="progress-bar">
