@@ -69,7 +69,7 @@ func waitForBackendStart(app *app.App) {
 				runtime.EventsEmit(app.Ctx, "started", blivedanmu.RoomInfo)
 			})
 			runtime.EventsOn(app.Ctx, "change", func(id ...interface{}) {
-				config.SetRoomId(id[0].(int))
+				config.SetRoomId(int(id[0].(float64)))
 				method.ChangeBackend()
 				runtime.WindowSetTitle(app.Ctx, blivedanmu.RoomInfo.Title)
 				runtime.EventsEmit(app.Ctx, "started", blivedanmu.RoomInfo)
