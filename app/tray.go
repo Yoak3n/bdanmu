@@ -1,17 +1,20 @@
 package app
 
 import (
+	_ "embed"
 	"github.com/getlantern/systray"
-	"github.com/getlantern/systray/example/icon"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
+
+//go:embed icon.ico
+var icon []byte
 
 func registerTray() {
 	systray.Run(onReady, onExit)
 }
 
 func onReady() {
-	systray.SetTemplateIcon(icon.Data, icon.Data)
+	systray.SetTemplateIcon(icon, icon)
 	systray.SetTitle("Bdanmu")
 	systray.SetTooltip("Bdanmu")
 	mShow := systray.AddMenuItem("显示", "")

@@ -15,8 +15,10 @@ let room_title = ref('')
 
 onMounted(async() => {
   const auth = await SyncAuth()
-  localStorage.setItem('cookie', auth[0])
-  localStorage.setItem('token', auth[1])
+  if (auth[0] != '' || auth[1] != '') {
+    localStorage.setItem('cookie', auth[0])
+    localStorage.setItem('token', auth[1])
+  }
   EventsOn('started', function (room) {
     localStorage.setItem('room_id', room.short_id)
     localStorage.setItem('room_title', room.title)

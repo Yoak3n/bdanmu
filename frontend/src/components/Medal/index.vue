@@ -33,19 +33,19 @@ if (props.name.length > 3) {
 <style scoped lang="less">
 .medal{
     min-width: 15%;
-
     text-align: center;
-    padding: 2px;
+    padding: 3px;
     color: white;
     display:flex;
     font-size: 15px;
+    align-items: center;
     height: 1rem;
     justify-content: space-between;
     margin: 0.1rem 0.5rem 0  0 ;
     border-radius: 5px;
     line-height: 1rem;
     .medal-level{
-        border-radius:2px ;
+        border-radius:3px ;
         width:1.5rem ;
         margin: 0 auto;
         background-color: white;
