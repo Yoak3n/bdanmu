@@ -1,6 +1,6 @@
 <template>
   <n-list hoverable clickable class="menu-wrapper">
-    <n-list-item class="menu-item" @click="()=>{$router.push('/')}">
+    <n-list-item class="menu-item" @click="()=>{$router.push('/dashboard')}">
       <template #prefix>
         <n-icon>
           <barcode />
