@@ -1,15 +1,13 @@
 <template>
     <div class="danmu-wrapper">
         <div class="danmu">
-            <div class="avatar">
+            <a class="avatar" href="javascript:void(0)" @click="BrowserOpenURL('https://space.bilibili.com/' + props.danmu.user.uid)">
                 <n-avatar round :size="45"
                     :src="props.danmu.user.avatar != '' ? props.danmu.user.avatar : 'https://i0.hdslb.com/bfs/face/member/noface.jpg'"
                     fallback-src="https://i0.hdslb.com/bfs/face/member/noface.jpg"
                     :img-props="{ class: 'avatar-img', alt: props.danmu.user.name }">
-
                 </n-avatar>
-            </div>
-
+            </a>
             <div class="content">
                 <div class="info">
                     <div v-if="props.danmu.user.guard" class="fleet"></div>
@@ -28,7 +26,7 @@ import type { PropType } from 'vue';
 import { NAvatar } from 'naive-ui'
 import { Danmu } from './danmu'
 import Medal from '../Medal/index.vue'
-
+import { BrowserOpenURL } from '../../../wailsjs/runtime/runtime';
 const props = defineProps(
     {
         danmu: {
