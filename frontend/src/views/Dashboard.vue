@@ -23,15 +23,15 @@
 import { ref, onMounted, nextTick } from 'vue';
 import { NAffix, NInfiniteScroll, useMessage } from 'naive-ui'
 import { useRoute } from 'vue-router';
+import { useRoomsStore} from '@/store/room'
 import Danmubox from '../components/Danmu/index.vue'
 import SuperChatbox from '../components/SuperChat/index.vue'
 import type { Danmu } from '../components/Danmu/danmu'
 import type { SuperChat } from '../components/SuperChat/super_chat';
 import type { User } from '../components/types'
-import { EventsOn,EventsOnce, EventsOff } from '../../wailsjs/runtime'
+import { EventsOn, EventsOff, EventsEmit } from '../../wailsjs/runtime'
 
-import { EventsEmit } from '../../wailsjs/runtime';
-
+const roomsStore = useRoomsStore()
 const containerRef = ref<HTMLElement | undefined>(undefined)
 const $message = useMessage()
 const $route = useRoute()
@@ -55,27 +55,39 @@ let superChats = ref<Array<SuperChat>>([
 ])
 onMounted(async () => {
   if ($route.query.from == "login") {
-    EventsOnce('started', function (room) {
+    EventsOn('started', function (room) {
+      roomsStore.setRoomTitle(room.title)
+      roomsStore.setRoomId(room.short_id)
       $message.create("已连接房间：" + room.short_id, { duration: 5000 })
       EventsOff("danmu", "user", "superChat")
       EventsOn("danmu", pushDanmu)
       EventsOn("user", updateDanmu)
       EventsOn("superChat", pushSuperChat)
     })
-  }else if ($route.query.from == "setting") {
+  } else if ($route.query.from == "setting") {
     danmus.value = []
-    EventsOnce('started', function (room) {
+    EventsOn('started', function (room) {
+      roomsStore.setRoomTitle(room.title)
+      roomsStore.setRoomId(room.short_id)
       $message.create("已连接房间：" + room.short_id, { duration: 5000 })
-        EventsOff("danmu", "user", "superChat")
-        EventsOn("danmu", pushDanmu)
-        EventsOn("user", updateDanmu)
-        EventsOn("superChat", pushSuperChat)
+      EventsOff("danmu", "user", "superChat")
+      EventsOn("danmu", pushDanmu)
+      EventsOn("user", updateDanmu)
+      EventsOn("superChat", pushSuperChat)
     })
-}
-  EventsOn("danmu", pushDanmu)
-  EventsOn("user", updateDanmu)
-  EventsOn("superChat", pushSuperChat)
-  EventsEmit("start")
+  } else {
+    EventsOn('started', function (room) {
+      roomsStore.setRoomTitle(room.title)
+      roomsStore.setRoomId(room.short_id)
+      $message.create("已连接房间：" + room.short_id, { duration: 5000 })
+      EventsOn("danmu", pushDanmu)
+      EventsOn("user", updateDanmu)
+      EventsOn("superChat", pushSuperChat)
+    })
+    EventsEmit("start")
+  }
+
+
 
 })
 
