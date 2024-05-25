@@ -18,6 +18,7 @@ func onReady() {
 	systray.SetTitle("Bdanmu")
 	systray.SetTooltip("Bdanmu")
 	mShow := systray.AddMenuItem("显示", "")
+	mMinimize := systray.AddMenuItem("最小化", "Minimize the app")
 	mQuit := systray.AddMenuItem("退出", "Quit the whole app")
 	go func() {
 		for {
@@ -25,6 +26,8 @@ func onReady() {
 			case <-mShow.ClickedCh:
 				runtime.WindowShow(app.Ctx)
 				systray.Quit()
+			case <-mMinimize.ClickedCh:
+				runtime.WindowMinimise(app.Ctx)
 			case <-mQuit.ClickedCh:
 				runtime.Quit(app.Ctx)
 			}

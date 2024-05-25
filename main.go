@@ -39,7 +39,8 @@ func appRun() {
 			Assets: assets,
 		},
 		Frameless:        true,
-		DisableResize:    true,
+		MaxWidth:         512,
+		MinWidth:         512,
 		BackgroundColour: &options.RGBA{R: 28, G: 28, B: 28, A: 1},
 		OnStartup:        a.Startup,
 		Bind: []interface{}{

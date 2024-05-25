@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {onMounted } from 'vue'
-import { NFloatButton, NIcon, NDrawer, NDrawerContent} from 'naive-ui'
+import { NFloatButton, NIcon, NDrawer, NDrawerContent,NScrollbar} from 'naive-ui'
 import { MenuOutline } from '@vicons/ionicons5'
 import NaiveProvider from './components/NaiveProvider/index.vue'
 import Menu from './components/Menu/index.vue'
@@ -41,17 +41,22 @@ onMounted(() => {
         <menu-outline />
       </n-icon>
     </n-float-button>
-    <n-drawer v-model:show="drawer_open" show-mask="transparent"
-      style="background-color: rgba(30,30,30,0.6);margin: 3rem 0;border: 1px solid rgba(240,240,240,0.6);border-radius:  10px 0 0 10px"
-      width="40%">
+    <n-drawer 
+    v-model:show="drawer_open" show-mask="transparent"
+    style="background-color: rgba(30,30,30,0.6);margin: 3rem 0;border: 1px solid rgba(240,240,240,0.6);border-radius:  10px 0 0 10px"
+    width="40%">
+
       <n-drawer-content body-content-style="padding: 0;">
+        <n-scrollbar style="max-height: 500px"> 
         <template #header >
           <div style="color:rgb(240,240,240);cursor: default;user-select: none" onselectstart="return false" unselectable="on">
           {{ title }}
           </div>
         </template>
         <Menu />
+      </n-scrollbar>
       </n-drawer-content>
+
     </n-drawer>
   </div>
 

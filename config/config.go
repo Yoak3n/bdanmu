@@ -13,7 +13,7 @@ type (
 		RoomId    int       `yaml:"room_id"`
 		Proxy     string    `yaml:"proxy"`
 		Extension bool      `yaml:"extension"`
-		Auth      Auth      `yaml:"wbi"`
+		Auth      Auth      `yaml:"auth"`
 		Database  *Database `yaml:"database"`
 	}
 	Auth struct {
@@ -91,7 +91,10 @@ func SetWBIKey(img string, sub string) {
 	t := time.Now().Unix()
 	Conf.Auth.LastUpdate = t
 	v.Set("auth.last_update", t)
-	v.WatchConfig()
+	err := v.WriteConfig()
+	if err != nil {
+		return
+	}
 }
 
 func SetCookieRefresh() {
