@@ -72,3 +72,7 @@ func (a *App) HideToTray() {
 func (a *App) SyncAuth() []string {
 	return []string{config.Conf.Auth.Cookie, config.Conf.Auth.RefreshToken} //config.Conf.Auth.Cookie, config.Conf.Auth.RefreshToken
 }
+
+func (a *App) SyncRoom() int {
+	return config.Conf.RoomId
+}

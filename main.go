@@ -9,8 +9,6 @@ import (
 	"bdanmu/package/util"
 	"bdanmu/service/blivedanmu"
 	"embed"
-	"fmt"
-
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
@@ -62,12 +60,12 @@ func appRun() {
 func waitForBackendStart(app *app.App) {
 	for {
 		if app.Ctx != nil {
-			fmt.Println("backend started")
-			runtime.EventsOnce(app.Ctx, "start", func(optionalData ...interface{}) {
-				method.InitBackend()
-				runtime.WindowSetTitle(app.Ctx, blivedanmu.RoomInfo.Title)
-				runtime.EventsEmit(app.Ctx, "started", blivedanmu.RoomInfo)
-			})
+			logger.Logger.Println("backend started")
+			// runtime.EventsOnce(app.Ctx, "start", func(optionalData ...interface{}) {
+			// 	method.InitBackend()
+			// 	runtime.WindowSetTitle(app.Ctx, blivedanmu.RoomInfo.Title)
+			// 	runtime.EventsEmit(app.Ctx, "started", blivedanmu.RoomInfo)
+			// })
 			runtime.EventsOn(app.Ctx, "change", func(id ...interface{}) {
 				config.SetRoomId(int(id[0].(float64)))
 				method.ChangeBackend()

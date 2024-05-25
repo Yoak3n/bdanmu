@@ -1,6 +1,11 @@
 <template>
   <n-list hoverable clickable class="menu-wrapper">
-    <n-list-item class="menu-item" @click="()=>{$router.push('/dashboard')}">
+    <n-list-item class="menu-item" @click="()=>{
+      if ($route.path != '/dashboard'){
+        $router.push({name: 'Dashboard', query: {from: $route.path.split('/')[1]}})
+      }
+      appStore.setDrawer(false)
+      }">
       <template #prefix>
         <n-icon>
           <barcode />
@@ -8,7 +13,10 @@
       </template>
       弹幕流
     </n-list-item>
-    <n-list-item class="menu-item" @click="JumpToLiveRoom">
+    <n-list-item class="menu-item" @click="(e)=>{
+      JumpToLiveRoom(e)
+      appStore.setDrawer(false)
+    }">
       <template #prefix>
         <n-icon>
           <book-icon />
@@ -17,7 +25,6 @@
       跳转直播间
     </n-list-item>
     <n-list-item class="menu-item">
-
       <template #prefix>
         <n-icon>
           <person-icon />
@@ -25,7 +32,10 @@
       </template>
       直播间信息
     </n-list-item>
-    <n-list-item class="menu-item" @click="()=>{$router.push('/setting')}">
+    <n-list-item class="menu-item" @click="()=>{
+      $router.push('/setting')
+      appStore.setDrawer(false)
+      }">
       <template #prefix>
         <n-icon>
           <settings />
@@ -33,7 +43,10 @@
       </template>
       设置
     </n-list-item>
-    <n-list-item class="menu-item" @click="HideWindow">
+    <n-list-item class="menu-item" @click="(e)=>{
+      HideWindow(e)
+      appStore.setDrawer(false)
+    }">
       <template #prefix>
       <n-icon>
         <caret-down />
@@ -62,8 +75,10 @@ import {
   BarcodeOutline as Barcode,
   CaretDownCircleOutline as CaretDown
 } from '@vicons/ionicons5'
-
+import {useAppStore} from '@/store'
 import {JumpToLiveRoom ,AppQuit,HideWindow}from './mixin'
+
+const appStore = useAppStore()
 
 
 </script>

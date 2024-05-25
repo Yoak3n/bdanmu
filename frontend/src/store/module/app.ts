@@ -1,0 +1,34 @@
+import { defineStore } from "pinia";
+import { SyncAuth } from "../../../wailsjs/go/app/App";
+export const useAppStore = defineStore("app", {
+    state: () => {
+        return {
+            cookie: "",
+            token: "",
+            drawer_open: false
+        };
+    },
+    actions: {
+        setCookie(cookie: string) {
+            this.cookie = cookie
+            localStorage.setItem('cookie', cookie)
+        },
+        setToken(token: string){
+            this.token = token
+            localStorage.setItem('token', token)
+        },
+        setDrawer(open: boolean){
+            this.drawer_open = open
+        },
+        async syncAuth (){
+          const auth = await SyncAuth()
+          if (auth[0] != '' || auth[1] != '') {
+            this.setCookie(auth[0])
+            this.setToken(auth[1])
+          }else{
+            this.setCookie('')
+            this.setToken('')
+          }
+        }
+    }
+})

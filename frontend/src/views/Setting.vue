@@ -22,6 +22,7 @@
 
 <script setup lang="ts">
 import { onMounted,ref } from 'vue';
+import { useRoomStore } from '@/store';
 import { EventsEmit } from '../../wailsjs/runtime';
 import { useRouter } from 'vue-router'
 import { 
@@ -34,13 +35,18 @@ import {
   darkTheme 
 } from 'naive-ui';
 const $router = useRouter()
+const roomStore = useRoomStore()
 let id = ref('')
 onMounted(() => {
-  id.value = localStorage.getItem("room_id")!
+  if (roomStore.room_id !== 0 || roomStore.room_id !== null) {
+    id.value = String(roomStore.room_id)
+  }else{
+    id.value = '6'
+  }
 })
 const saveSettingAndRestart = () => {
-  EventsEmit("change", Number(id.value))
   $router.push({name: 'Dashboard', query: {from: 'setting'}})
+  EventsEmit("change", Number(id.value))
 }
 
 </script>

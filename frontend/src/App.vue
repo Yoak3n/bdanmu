@@ -1,20 +1,22 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import {onMounted } from 'vue'
 import { NFloatButton, NIcon, NDrawer, NDrawerContent} from 'naive-ui'
 import { MenuOutline } from '@vicons/ionicons5'
 import NaiveProvider from './components/NaiveProvider/index.vue'
 import Menu from './components/Menu/index.vue'
 import { useRoute } from 'vue-router'
-import { useRoomsStore } from '@/store/room'
+import { useRoomStore,useAppStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
-const roomsStore = useRoomsStore()
+const roomsStore = useRoomStore()
+const appStore = useAppStore()
 const $route = useRoute()
-let drawer_open = ref(false)
 
 let { room_title:title } = storeToRefs(roomsStore)
+let {drawer_open:drawer_open} = storeToRefs(appStore)
 onMounted(() => {
-  roomsStore.syncAuth()
+  appStore.syncAuth()
+  roomsStore.syncRoomId()
 })
 
 </script>
@@ -29,7 +31,12 @@ onMounted(() => {
     </router-view>
   </naive-provider>
   <div>
-    <n-float-button :right="0" :bottom="0" shape="square" @click="drawer_open = !drawer_open" class="menu">
+    <n-float-button 
+    :right="0" 
+    :bottom="0" 
+    shape="square" 
+    @click="appStore.setDrawer(true)" 
+    class="menu">
       <n-icon>
         <menu-outline />
       </n-icon>
@@ -77,4 +84,4 @@ onMounted(() => {
     background-color: rgba(240, 240, 240, 1);
   }
 }
-</style>
+</style>@/store/module/app

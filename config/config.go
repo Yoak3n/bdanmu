@@ -42,6 +42,7 @@ func init() {
 	_, err1 := os.Stat("config.yaml")
 	_, err2 := os.Stat("config.yml")
 	if os.IsNotExist(err1) && os.IsNotExist(err2) {
+		logger.Logger.Println("config file not exist")
 		fp, _ := os.Create("config.yaml")
 		defer fp.Close()
 	}
@@ -58,7 +59,6 @@ func init() {
 	}
 	v.SetDefault("database.type", "sqlite")
 	v.SetDefault("database.name", "bliveDB")
-	v.SetDefault("room_id", 6)
 	getConfigFromFile()
 	v.WatchConfig()
 }
