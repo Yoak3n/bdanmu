@@ -24,14 +24,17 @@
       </template>
       跳转直播间
     </n-list-item>
-    <n-list-item class="menu-item">
+    <!-- <n-list-item class="menu-item" @click="()=>{
+      console.log('直播间信息');
+      appStore.setDrawer(false)
+      }"> 
       <template #prefix>
         <n-icon>
           <person-icon />
         </n-icon>
       </template>
       直播间信息
-    </n-list-item>
+    </n-list-item> -->
     <n-list-item class="menu-item" @click="()=>{
       $router.push('/setting')
       appStore.setDrawer(false)
@@ -63,13 +66,16 @@
       退出
     </n-list-item>
   </n-list>
+  <n-modal>
+
+  </n-modal>
 
 </template>
 <script setup lang="ts">
-import { NList, NListItem ,NIcon} from 'naive-ui'
+import { NList, NListItem ,NIcon,NModal} from 'naive-ui'
 import {
   BookOutline as BookIcon,
-  PersonOutline as PersonIcon,
+  // PersonOutline as PersonIcon,
   LogOutOutline as Logout,
   SettingsOutline as Settings,
   BarcodeOutline as Barcode,

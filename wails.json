@@ -3,7 +3,6 @@
   "name": "bdanmu",
   "version": "2",
   "outputfilename": "bdanmu",
-  "devServer": "localhost:5174",
   "frontend:install": "pnpm install",
   "frontend:build": "pnpm run build",
   "frontend:dev:watcher": "pnpm run dev",

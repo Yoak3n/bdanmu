@@ -14,3 +14,12 @@ interface Medal {
     level:number,
     target_id:number
 }
+
+export interface Room{
+    short_id:number,
+    user?:User,
+    title:string,
+    cover:string,
+    long_id:number,
+    follower_count:number,
+}

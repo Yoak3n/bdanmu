@@ -24,7 +24,7 @@ import Danmubox from '../components/Danmu/index.vue'
 import SuperChatbox from '../components/SuperChat/index.vue'
 import type { Danmu } from '../components/Danmu/danmu'
 import type { SuperChat } from '../components/SuperChat/super_chat';
-import type { User } from '../components/types'
+import type { User,Room } from '../components/types'
 import { EventsOn, EventsOff, EventsEmit } from '../../wailsjs/runtime'
 
 const roomsStore = useRoomStore()
@@ -50,7 +50,8 @@ onActivated(() => {
 
 onMounted(() => {
   console.log("change trigger once" );
-    EventsOn('started', function (room) {
+    EventsOn('started', function (room:Room) {
+      console.log(room);
       roomsStore.setRoomTitle(room.title)
       roomsStore.setRoomId(room.short_id)
       window.$message.create("已连接房间：" + room.short_id, { duration: 5000 })

@@ -47,12 +47,12 @@ onMounted(() => {
     width="40%">
 
       <n-drawer-content body-content-style="padding: 0;">
-        <n-scrollbar style="max-height: 500px"> 
         <template #header >
           <div style="color:rgb(240,240,240);cursor: default;user-select: none" onselectstart="return false" unselectable="on">
           {{ title }}
           </div>
         </template>
+        <n-scrollbar style="max-height: 500px"> 
         <Menu />
       </n-scrollbar>
       </n-drawer-content>
