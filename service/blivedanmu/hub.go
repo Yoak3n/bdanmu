@@ -17,17 +17,18 @@ var (
 	appCtx context.Context
 )
 
-func InitHub() {
+func InitHub() (err error) {
+	RoomInfo, err = getRoomInfo(config.Conf.RoomId)
+	if err != nil {
+		return err
+	}
 	cl = client.NewClient(config.Conf.RoomId)
 	log.Println("connecting room:", cl.RoomID)
 	cl.SetCookie(config.Conf.Auth.Cookie)
-	var err error
-	RoomInfo, err = getRoomInfo(config.Conf.RoomId)
-	if err != nil {
-		log.Panic(err)
-	}
+
 	RegisterHandler()
 	appCtx = app.GetApp().Ctx
+	return nil
 }
 
 func RegisterHandler() {

@@ -17,7 +17,7 @@ import (
 
 func messageHandler(msg *message.Danmaku) {
 	if msg.Type == message.EmoticonDanmaku {
-		msg.Content = fmt.Sprintf("<img src='%s' />", msg.Emoticon.Url)
+		msg.Content = fmt.Sprintf("<img src='%s' max-width='100px' />", msg.Emoticon.Url)
 	} else {
 		// 处理emoji表情
 		result := gjson.Get(msg.Raw, "info.0.15.extra").String()

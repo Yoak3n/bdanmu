@@ -14,14 +14,20 @@ func InitBackend() {
 	}
 }
 
-func ChangeBackend() {
+func ChangeBackend() error {
 	cl := blivedanmu.GetClient()
 	if cl != nil {
 		cl.Stop()
 	}
-	blivedanmu.InitHub()
-	err := blivedanmu.GetClient().Start()
+	err := blivedanmu.InitHub()
 	if err != nil {
 		logger.Logger.Errorln(err)
+		return err
 	}
+	err = blivedanmu.GetClient().Start()
+	if err != nil {
+		logger.Logger.Errorln(err)
+		return err
+	}
+	return nil
 }

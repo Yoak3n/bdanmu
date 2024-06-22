@@ -5,7 +5,8 @@ export const useAppStore = defineStore("app", {
         return {
             cookie: "",
             token: "",
-            drawer_open: false
+            drawer_open: false,
+            on_top:false,
         };
     },
     actions: {
@@ -19,6 +20,9 @@ export const useAppStore = defineStore("app", {
         },
         setDrawer(open: boolean){
             this.drawer_open = open
+        },
+        setOnTop(){
+            this.on_top = !this.on_top
         },
         async syncAuth (){
           const auth = await SyncAuth()

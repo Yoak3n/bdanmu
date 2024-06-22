@@ -8,7 +8,7 @@
       </Transition>
       <!-- <button @click="testSuperChat">test</button> -->
     </n-affix>
-    <n-infinite-scroll class="danmu-box">
+    <n-infinite-scroll class="danmu-box" style="z-index: -1;">
       <div v-for="(danmu, index) in danmus" :id="index == danmus.length - 1 ? 'bottom' : ''" :key="danmu.message_id">
         <Danmubox :danmu="danmu" />
       </div>
@@ -60,7 +60,11 @@ onMounted(() => {
       EventsOn("user", updateDanmu)
       EventsOn("superChat", pushSuperChat)
     })
-
+    EventsOn('error', function (err:string) {
+      console.log(err);
+      window.$message.error("未找到直播间",{keepAliveOnHover: true,duration: 5000})
+      $router.push({name: 'Setting', query: {from: 'dashboard'}})
+    })
 })
 
 
@@ -68,7 +72,6 @@ const pushSuperChat = (super_chat: SuperChat) => {
   superChats.value.push(super_chat)
   setTimeout(() => {
     superChats.value.splice(superChats.value.findIndex((sc) => sc.end_time == super_chat.end_time), 1)
-    console.log("delete")
   }, (super_chat.end_time - super_chat.timestamp) * 1000)
 }
 
@@ -105,7 +108,6 @@ const updateDanmu = (user: User) => {
   // margin: 0 2rem;
   .super-chat-box {
     width: 100%;
-    z-index: 9;
   }
 
   .danmu-box {

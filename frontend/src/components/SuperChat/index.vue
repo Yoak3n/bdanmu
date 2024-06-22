@@ -17,8 +17,8 @@ let height = 30
 </script>
 
 <template>
-  <div class="super-chat-wrapper" ref="superChatRef">
-      <div class="super-chat-box" v-if="props.data != null">
+  <div class="super-chat-wrapper" ref="superChatRef" style="z-index: 99999;" >
+      <div class="super-chat-box" v-if="props.data != null" >
       <div class="info">
         <a href="javascript:void(0)" @click="BrowserOpenURL('https://space.bilibili.com/' + props.data.user.uid)">
           <n-avatar round :size="45" :src="props.data.user.avatar"
