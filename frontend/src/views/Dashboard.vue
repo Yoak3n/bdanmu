@@ -9,9 +9,9 @@
       <!-- <button @click="testSuperChat">test</button> -->
     </n-affix>
     <n-infinite-scroll class="danmu-box" style="z-index: -1;">
-      <div v-for="(danmu, index) in danmus" :id="index == danmus.length - 1 ? 'bottom' : ''" :key="danmu.message_id">
-        <Danmubox :danmu="danmu" />
-      </div>
+      <transition-group name="fade" tag="div">
+          <Danmubox v-for="(danmu, index) in danmus" :id="index == danmus.length - 1 ? 'bottom' : ''" :key="danmu.message_id" class="danmu-item" :danmu="danmu" />
+      </transition-group>
     </n-infinite-scroll>
   </div>
 </template>
@@ -101,7 +101,22 @@ const updateDanmu = (user: User) => {
 </script>
 
 <style scoped lang="less">
-.home-wrapper {
+.fade-move{
+transition: all .5s ease;
+}
+.fade-leave-active,
+.fade-enter-active {
+  transition: all .5s ease;
+}
+.fade-leave-to,
+.fade-enter-from{
+  opacity: 0;
+  transform: translateX(-30px);
+}
+.fade-leave-active{
+  position: absolute;
+}
+.dashboard-wrapper {
   height: 100%;
   width: 100%;
 
@@ -114,6 +129,7 @@ const updateDanmu = (user: User) => {
     height: 100%;
     width: 100%;
     overflow-y: scroll;
+    position: relative;
   }
 
 }
