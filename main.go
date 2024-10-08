@@ -1,19 +1,20 @@
 package main
 
 import (
-	"bdanmu/api/method"
+	"bdanmu/api/router"
 	"bdanmu/app"
-	"bdanmu/config"
+	"bdanmu/app/runtime"
+
 	"bdanmu/database"
 	"bdanmu/package/logger"
 	"bdanmu/package/util"
 	"bdanmu/service/blivedanmu"
 	"embed"
+
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
-	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 //go:embed all:frontend/dist
@@ -23,6 +24,7 @@ func main() {
 	go func() {
 		util.CreateDirNotExists("data/webview")
 		database.InitDatabase()
+		router.InitRouter()
 	}()
 	appRun()
 }
@@ -30,7 +32,15 @@ func main() {
 func appRun() {
 	a := app.NewApp()
 	blivedanmu.Start()
-	go waitForBackendStart(a)
+	// register global event(把丑陋的东西写在看起来正常的地方那它就看起来正常了)
+	go func(app *app.App) {
+		for {
+			if app.Ctx != nil {
+				runtime.RegisterSetRoomId(&app.Ctx)
+				return
+			}
+		}
+	}(a)
 	err := wails.Run(&options.App{
 		Title:  "",
 		Width:  512,
@@ -55,32 +65,4 @@ func appRun() {
 	if err != nil {
 		logger.Logger.Errorln(err)
 	}
-}
-
-// 由于初期架构问题，只能在主函数中注册事件才能暂时避免循环引用，丑陋的写法
-func waitForBackendStart(app *app.App) {
-	for {
-		if app.Ctx != nil {
-			logger.Logger.Println("backend started")
-			// runtime.EventsOnce(app.Ctx, "start", func(optionalData ...interface{}) {
-			// 	method.InitBackend()
-			// 	runtime.WindowSetTitle(app.Ctx, blivedanmu.RoomInfo.Title)
-			// 	runtime.EventsEmit(app.Ctx, "started", blivedanmu.RoomInfo)
-			// })
-			runtime.EventsOn(app.Ctx, "change", func(id ...interface{}) {
-				config.SetRoomId(int(id[0].(float64)))
-				err := method.ChangeBackend()
-				if err != nil {
-					logger.Logger.Errorln(err)
-					runtime.EventsEmit(app.Ctx, "error", err.Error())
-				} else {
-					runtime.WindowSetTitle(app.Ctx, blivedanmu.RoomInfo.Title)
-					runtime.EventsEmit(app.Ctx, "started", blivedanmu.RoomInfo)
-				}
-			})
-			return
-		}
-
-	}
-
 }

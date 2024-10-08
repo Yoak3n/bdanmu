@@ -49,9 +49,7 @@ onActivated(() => {
 })
 
 onMounted(() => {
-  console.log("change trigger once" );
     EventsOn('started', function (room:Room) {
-      console.log(room);
       roomsStore.setRoomTitle(room.title)
       roomsStore.setRoomId(room.short_id)
       window.$message.create("已连接房间：" + room.short_id, { duration: 5000 })
@@ -61,8 +59,7 @@ onMounted(() => {
       EventsOn("superChat", pushSuperChat)
     })
     EventsOn('error', function (err:string) {
-      console.log(err);
-      window.$message.error("未找到直播间",{keepAliveOnHover: true,duration: 5000})
+      window.$message.error(err,{keepAliveOnHover: true,duration: 5000})
       $router.push({name: 'Setting', query: {from: 'dashboard'}})
     })
 })

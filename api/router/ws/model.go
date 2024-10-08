@@ -1,8 +1,10 @@
 package ws
 
 import (
-	"github.com/gorilla/websocket"
+	"bdanmu/package/logger"
 	"sync"
+
+	"github.com/gorilla/websocket"
 )
 
 type Server struct {
@@ -45,18 +47,12 @@ func (c *Client) CloseClient() {
 
 func (c *Client) ReadMessage() {
 	for {
-		t, _, err := c.Connection.ReadMessage()
-		if err != nil {
-			c.Connection.Close()
-			return
-		}
-		if t == -1 {
-			c.Connection.Close()
-			return
-		}
-		if t == 3000 {
+		t, p, err := c.Connection.ReadMessage()
+		if err != nil || t == -1 {
 			c.CloseSignal <- true
+			return
 		}
+		logger.Logger.Infoln(string(p))
 
 	}
 }
