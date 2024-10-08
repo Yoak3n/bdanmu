@@ -17,7 +17,7 @@
 1. 改用`postgreSQL`数据库以提高后端性能（需要另外运行数据库服务）
 ```yaml
 database:
-    type: postgres
+    type: postgresql
     name: bliveDB
     host: 127.0.0.1
     port: 5432

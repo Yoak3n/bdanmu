@@ -12,7 +12,7 @@ var (
 
 func InitDatabase() {
 	switch config.Conf.Database.Type {
-	case "postgres":
+	case "postgres", "postgresql", "pgsql", "postgreSQL":
 		db = initPostgres(config.Conf.Database.Host, config.Conf.Database.User, config.Conf.Database.Password, config.Conf.Database.Name, config.Conf.Database.Port)
 	case "sqlite", "sqlite3":
 		db = initSqlite(config.Conf.Database.Name)
