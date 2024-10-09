@@ -55,11 +55,11 @@ func messageHandler(msg *message.Danmaku) {
 		MessageId: uuid.NewString(),
 		RoomId:    config.Conf.RoomId,
 	}
-	go runtime.EventsEmit(appCtx, "danmu", danMu)
 	m := &model.Message{
 		Type: consts.DAN_MU,
 		Data: danMu,
 	}
+	go runtime.EventsEmit(appCtx, "message", m)
 	ws.WriteMessage(m)
 
 }
@@ -98,6 +98,6 @@ func superChatHandler(s *message.SuperChat) {
 		Type: consts.SUPER_CHAT,
 		Data: superChat,
 	}
-	go runtime.EventsEmit(appCtx, "superChat", superChat)
+	go runtime.EventsEmit(appCtx, "message", m)
 	ws.WriteMessage(m)
 }
