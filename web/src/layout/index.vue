@@ -91,21 +91,11 @@ const updateDanmu = (user: User) => {
   .fade-leave-active{
     position: absolute;
   }
-  .dashboard-wrapper {
+  .infinite-list {
     height: 100%;
     width: 100%;
-  
-    // margin: 0 2rem;
-    .super-chat-box {
-      width: 100%;
-    }
-  
-    .danmu-box {
-      height: 100%;
-      width: 100%;
-      overflow-y: scroll;
-      position: relative;
-    }
+    overflow: hidden;
+    scrollbar-width: none;
   
   }
 

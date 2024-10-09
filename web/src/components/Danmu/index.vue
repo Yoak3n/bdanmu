@@ -1,7 +1,7 @@
 <template>
     <div class="danmu-wrapper">
         <div class="danmu">
-            <a class="avatar" href="javascript:void(0)">
+            <a class="avatar" :href="`https://space.bilibili.com/${danmu.user.uid}` "target="_blank">
                 <el-avatar round :size="45"
                     :src="props.danmu.user.avatar != '' ? props.danmu.user.avatar : 'https://i0.hdslb.com/bfs/face/member/noface.jpg'"
                     fallback-src="https://i0.hdslb.com/bfs/face/member/noface.jpg"
