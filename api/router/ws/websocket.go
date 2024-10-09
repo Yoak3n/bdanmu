@@ -2,6 +2,8 @@ package ws
 
 import (
 	"bdanmu/app"
+	"bdanmu/consts"
+	"bdanmu/package/logger"
 	"bdanmu/package/model"
 	"encoding/json"
 	"net/http"
@@ -15,6 +17,10 @@ var (
 	upgrader = websocket.Upgrader{
 		ReadBufferSize:  4094,
 		WriteBufferSize: 4096,
+		// websocket 真正的跨域
+		CheckOrigin: func(r *http.Request) bool {
+			return true
+		},
 	}
 	serverHub *Server
 )
@@ -35,6 +41,9 @@ func RegisterClient(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 	}
+	if conn != nil {
+		_ = conn.WriteMessage(websocket.TextMessage, []byte("success"))
+	}
 	client := &Client{
 		Connection:  conn,
 		Message:     make(chan []byte),
@@ -44,22 +53,31 @@ func RegisterClient(c *gin.Context) {
 		if conn != nil {
 			_ = conn.Close()
 		}
+		for i, c := range serverHub.Clients {
+			if c == client {
+				serverHub.Clients = append(serverHub.Clients[:i], serverHub.Clients[i+1:]...)
+				break
+			}
+		}
 	}(conn)
 	serverHub.Clients = append(serverHub.Clients, client)
 	if conn != nil {
 		_ = conn.WriteMessage(websocket.TextMessage, []byte("success"))
-	}
-	go client.SendMessage()
-	go client.ReadMessage()
-	//go client.CloseClient()
+		logger.Logger.Infoln("2 client connected, total: ", len(serverHub.Clients)+1)
+		go client.SendMessage()
+		go client.ReadMessage()
+		//go client.CloseClient()
 
-	signal := <-client.CloseSignal
-	if signal {
-		// maybe invalid address
-		err := conn.Close()
-		if err != nil {
-			return
+		signal := <-client.CloseSignal
+		logger.Logger.Infoln("client closed, signal: ")
+		if signal {
+			err := conn.Close()
+			if err != nil {
+				return
+			}
 		}
+	} else {
+		logger.Logger.Infoln("2 client closed, total: ", len(serverHub.Clients))
 	}
 
 }
@@ -71,12 +89,21 @@ func WriteMessage(message *model.Message) {
 	}
 	if clients := serverHub.Clients; len(clients) > 0 {
 		for _, client := range clients {
-			client.Message <- data
+			if client.Connection != nil {
+				client.Message <- data
+			}
 		}
 	}
 }
 
 func UpdateUser(user *model.User) {
+	if user != nil {
+		msg := &model.Message{
+			Type: consts.USER_INFO,
+			Data: user,
+		}
+		WriteMessage(msg)
+	}
 	if ctx := app.GetApp(); ctx != nil {
 		runtime.EventsEmit(ctx.Ctx, "user", user)
 	}
