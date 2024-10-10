@@ -1,7 +1,7 @@
 <template>
     <div class="danmu-wrapper">
         <div class="danmu">
-            <a class="avatar" :href="`https://space.bilibili.com/${danmu.user.uid}` "target="_blank">
+            <a class="avatar" :href="`https://space.bilibili.com/${danmu.user.uid}`" target="_blank">
                 <el-avatar round :size="45"
                     :src="props.danmu.user.avatar != '' ? props.danmu.user.avatar : 'https://i0.hdslb.com/bfs/face/member/noface.jpg'"
                     fallback-src="https://i0.hdslb.com/bfs/face/member/noface.jpg"
@@ -15,7 +15,10 @@
                         :level="props.danmu.user.medal?.level" />
                     <span class="name">{{ props.danmu.user.name }}</span>
                 </div>
-                <div class="message" v-html="props.danmu.content">
+                <div class="message-box">
+                    <div class="message" v-html="props.danmu.content">
+                </div>
+
                 </div>
             </div>
         </div>
@@ -56,33 +59,49 @@ const props = defineProps(
         width: 100%;
 
         .avatar {
-            width: 15%;
+            display: flex;
+            width: 45px;
             height: auto;
             line-height: 100%;
             text-align: center;
-            padding-top: 10px;
+            align-items: center;
+            justify-content: center;
 
         }
 
         .content {
             width: 85%;
             padding: 1%;
-
-            .message {
+            
+            .message-box {
                 display: flex;
                 font-size: 16px;
-                align-items: center;
+                width: 100%;
+                .message{
+                    max-width: 95%;
+                    background-color: #6ed7db;
+                    font-size: 20px;
+                    color:#fff;
+                    word-wrap:break-word;
+                    overflow-wrap: break-word;
+                    border-radius: 10px 20px  20px 10px;
+                    padding: 0 15px 0 10px;
+                    align-items: center;
+                    font-weight: bold;
+                
+                }
+                
             }
 
             .info {
                 // background-color: bisque;
                 border-radius: 5px;
-                margin: 0 1%;
+                margin: 0 ;
                 height: 1.5rem;
                 line-height: 1.5rem;
                 display: flex;
                 justify-content: left;
-
+                width: 400px;
                 .name {
                     color: rgb(189, 193, 197);
                     font-size: 1rem;

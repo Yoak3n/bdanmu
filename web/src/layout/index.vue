@@ -12,7 +12,7 @@ onMounted(() => {
 
 const initWebSocket = () => {
   //初始化weosocket
-  const wsuri = "ws://localhost:8080/ws"; //ws地址
+  const wsuri = "/ws"; //ws地址
   $websocket.value = new WebSocket(wsuri);
   $websocket.value.onopen = () => {
     console.log('连接成功')

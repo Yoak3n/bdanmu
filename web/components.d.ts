@@ -9,11 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     Danmu: typeof import('./src/components/Danmu/index.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
-    ElButton: typeof import('element-plus/es')['ElButton']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     Medal: typeof import('./src/components/Medal/index.vue')['default']
-  }
-  export interface ComponentCustomProperties {
-    vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']
   }
 }
