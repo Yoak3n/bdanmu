@@ -3,6 +3,8 @@ package router
 import (
 	"bdanmu/api/router/middleware"
 	"bdanmu/api/router/ws"
+	"bdanmu/config"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,7 +19,8 @@ func InitRouter() {
 
 	r.Static("/assets", "./resource/assets")
 	r.GET("/", renderIndex)
-	r.Run(":8080")
+	addr := fmt.Sprintf("0.0.0.0:%d", config.Conf.Port)
+	r.Run(addr)
 }
 func renderIndex(c *gin.Context) {
 

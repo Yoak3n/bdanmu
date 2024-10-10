@@ -15,6 +15,7 @@ type (
 		Extension bool      `yaml:"extension"`
 		Auth      Auth      `yaml:"auth"`
 		Database  *Database `yaml:"database"`
+		Port      int       `yaml:"port"`
 	}
 	Auth struct {
 		Cookie       string `yaml:"cookie"`
@@ -59,6 +60,7 @@ func init() {
 	}
 	v.SetDefault("database.type", "sqlite")
 	v.SetDefault("database.name", "bliveDB")
+	v.SetDefault("port", 10420)
 	getConfigFromFile()
 	v.WatchConfig()
 }
@@ -67,6 +69,7 @@ func getConfigFromFile() {
 	Conf.RoomId = v.GetInt("room_id")
 	Conf.Proxy = v.GetString("proxy")
 	Conf.Extension = v.GetBool("extension")
+	Conf.Port = v.GetInt("port")
 
 	Conf.Auth.Cookie = v.GetString("auth.cookie")
 	Conf.Auth.RefreshToken = v.GetString("auth.refresh_token")
