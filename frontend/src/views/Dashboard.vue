@@ -24,7 +24,7 @@ import Danmubox from '../components/Danmu/index.vue'
 import SuperChatbox from '../components/SuperChat/index.vue'
 import type { Danmu } from '../components/Danmu/danmu'
 import type { SuperChat } from '../components/SuperChat/super_chat';
-import type { User,Room } from '../components/types'
+import { type User,type Room,type Message, MessageType} from '../components/types'
 import { EventsOn, EventsOff, EventsEmit } from '../../wailsjs/runtime'
 
 const roomsStore = useRoomStore()
@@ -53,10 +53,9 @@ onMounted(() => {
       roomsStore.setRoomTitle(room.title)
       roomsStore.setRoomId(room.short_id)
       window.$message.create("已连接房间：" + room.short_id, { duration: 5000 })
-      EventsOff("danmu", "user", "superChat")
-      EventsOn("danmu", pushDanmu)
+      EventsOff("message", "user")
+      EventsOn("message", reciveMessage)
       EventsOn("user", updateDanmu)
-      EventsOn("superChat", pushSuperChat)
     })
     EventsOn('error', function (err:string) {
       window.$message.error(err,{keepAliveOnHover: true,duration: 5000})
@@ -81,9 +80,19 @@ const pushDanmu = (danmu: Danmu) => {
     const bottom = document.getElementById("bottom")
     bottom?.scrollIntoView({ behavior: "smooth", block: "center", inline: "end" });
   })
-
 }
-
+const reciveMessage = (message: Message) => {
+  switch (message.type) {
+    case MessageType.Danmu:
+      pushDanmu(message.data as Danmu)
+      break;
+    case MessageType.SuperChat:
+      pushSuperChat(message.data as SuperChat)
+      break;
+    default:
+      break;
+  }
+}
 const updateDanmu = (user: User) => {
   danmus.value.forEach(danmu => {
     if (danmu.user.uid == user.uid) {
