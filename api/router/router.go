@@ -19,7 +19,7 @@ func InitRouter() {
 
 	r.Static("/assets", "./resource/assets")
 	r.GET("/", renderIndex)
-	addr := fmt.Sprintf("0.0.0.0:%d", config.Conf.Port)
+	addr := fmt.Sprintf(":%d", config.Conf.Port)
 	r.Run(addr)
 }
 func renderIndex(c *gin.Context) {

@@ -84,6 +84,7 @@ const pushDanmu = (danmu: Danmu) => {
 const reciveMessage = (message: Message) => {
   switch (message.type) {
     case MessageType.Danmu:
+      console.log(message.data)
       pushDanmu(message.data as Danmu)
       break;
     case MessageType.SuperChat:
