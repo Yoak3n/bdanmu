@@ -72,6 +72,7 @@ func collectUserId() {
 					go func(ids []int64) {
 						users := getUserInfoMultiply(ids)
 						if len(users) > 0 {
+							service.CreateUserAndUpdateStack(users)
 							for _, user := range users {
 								reply := make(map[int64]*model.User)
 								reply[user.UID] = user

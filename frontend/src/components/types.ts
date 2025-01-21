@@ -27,7 +27,8 @@ export interface Room{
 export enum MessageType {
     SuperChat = 0,
     UserEntry = 1,
-    Danmu = 2,
+    UserInfo = 2,
+    Danmu = 3,
 }
 
 import type {Danmu} from '../../src/components/Danmu/danmu'
