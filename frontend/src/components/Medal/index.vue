@@ -46,8 +46,10 @@ if (props.name.length > 3) {
     line-height: 1rem;
     .medal-level{
         border-radius:3px ;
-        width:1.5rem ;
-        margin: 0 auto;
+        width:auto;
+        margin: 0 1px 0 3px;
+        padding: 0 1px;
+        font-size: 13px;
         background-color: white;
     }
     .medal-name{
