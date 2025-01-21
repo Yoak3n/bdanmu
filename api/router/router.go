@@ -2,6 +2,7 @@ package router
 
 import (
 	"bdanmu/api/router/middleware"
+	"bdanmu/api/router/register"
 	"bdanmu/api/router/ws"
 	"bdanmu/config"
 	"fmt"
@@ -15,6 +16,8 @@ func InitRouter() {
 	r = gin.Default()
 	r.Use(middleware.CORSMiddleware())
 	r.GET("/ws", ws.RegisterClient)
+	api := r.Group("/api")
+	register.RegisterAPI(api)
 	r.LoadHTMLFiles("resource/index.html")
 
 	r.Static("/assets", "./resource/assets")

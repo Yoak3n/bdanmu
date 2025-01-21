@@ -2,7 +2,7 @@ package service
 
 import (
 	"bdanmu/database"
-	"bdanmu/package/model"
+	"bdanmu/internal/model"
 	"gorm.io/gorm/clause"
 	"sync"
 	"time"

@@ -3,8 +3,8 @@ package ws
 import (
 	"bdanmu/app"
 	"bdanmu/consts"
+	"bdanmu/internal/model"
 	"bdanmu/package/logger"
-	"bdanmu/package/model"
 	"encoding/json"
 	"net/http"
 

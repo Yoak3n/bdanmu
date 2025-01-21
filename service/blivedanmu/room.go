@@ -2,7 +2,7 @@ package blivedanmu
 
 import (
 	"bdanmu/config"
-	"bdanmu/package/model"
+	"bdanmu/internal/model"
 	"bdanmu/package/request"
 	"errors"
 	"fmt"

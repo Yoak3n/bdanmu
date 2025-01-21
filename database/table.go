@@ -1,8 +1,8 @@
 package database
 
 import (
+	"bdanmu/internal/model"
 	"bdanmu/package/logger"
-	"bdanmu/package/model"
 	"gorm.io/gorm"
 )
 

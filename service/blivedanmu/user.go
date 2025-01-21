@@ -2,8 +2,8 @@ package blivedanmu
 
 import (
 	"bdanmu/config"
+	"bdanmu/internal/model"
 	"bdanmu/package/logger"
-	"bdanmu/package/model"
 	"bdanmu/package/request"
 	"bdanmu/package/util"
 	"bdanmu/service"

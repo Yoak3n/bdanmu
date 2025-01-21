@@ -4,8 +4,8 @@ import (
 	"bdanmu/api/router/ws"
 	"bdanmu/config"
 	"bdanmu/consts"
+	"bdanmu/internal/model"
 	"bdanmu/package/logger"
-	"bdanmu/package/model"
 	"fmt"
 	"strings"
 
