@@ -4,6 +4,7 @@ import (
 	"bdanmu/api/router"
 	"bdanmu/app"
 	"bdanmu/app/runtime"
+	"bdanmu/config"
 
 	"bdanmu/database"
 	"bdanmu/package/logger"
@@ -21,6 +22,11 @@ import (
 var assets embed.FS
 
 func main() {
+	// 暂时不使用清空cookie的方法
+	// if !config.CheckCookieNeedRefreshFromFrontend() {
+	// 	config.SetCookieRefresh()
+	// }
+	config.RefreshCookie()
 	go func() {
 		util.CreateDirNotExists("data/webview")
 		database.InitDatabase()
@@ -53,7 +59,7 @@ func appRun() {
 		MinWidth:         512,
 		BackgroundColour: &options.RGBA{R: 28, G: 28, B: 28, A: 1},
 		OnStartup:        a.Startup,
-		Bind: []interface{}{
+		Bind: []any{
 			a,
 		},
 		Windows: &windows.Options{

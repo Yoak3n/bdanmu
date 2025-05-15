@@ -22,7 +22,4 @@ func InitRouter() {
 	addr := fmt.Sprintf(":%d", config.Conf.Port)
 	r.Run(addr)
 }
-func renderIndex(c *gin.Context) {
-
-	c.HTML(200, "index.html", "")
-}
+func renderIndex(c *gin.Context) { c.HTML(200, "index.html", "") }
