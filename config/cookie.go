@@ -65,6 +65,7 @@ func checkCookieNeedRefresh() (bool, int64, error) {
 func CheckCookieValid() bool {
 	logger.Logger.Println("检查cookie有效性")
 	refresh, _, err := checkCookieNeedRefresh()
+	logger.Logger.Debugln("checkCookieNeedRefresh", refresh, err)
 	if err != nil {
 		if err.Error() == "cookie有效" {
 			return true
@@ -72,7 +73,7 @@ func CheckCookieValid() bool {
 			return false
 		}
 	}
-	return refresh
+	return !refresh
 }
 
 func RefreshCookie() error {

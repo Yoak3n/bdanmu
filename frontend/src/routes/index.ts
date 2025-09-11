@@ -12,6 +12,7 @@ router.beforeEach(async(to, _, next) => {
         // 判断该路由是否需要登录权限
         const auth = await CheckAuth()
         if (!auth) {
+            console.log("need login")
             next({
                 path: '/login',
                 query: {
@@ -19,6 +20,7 @@ router.beforeEach(async(to, _, next) => {
                 }
             })
         }else{
+            console.log("auth passed")
             next()
         }
     }else{
