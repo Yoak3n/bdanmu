@@ -36,13 +36,7 @@ JNrRuoEUXpabUzGB8QIDAQAB
 func LoginFromFrontend() (string, string) {
 	return getLoginUrl()
 }
-func CheckCookieNeedRefreshFromFrontend() bool {
-	needed, _, err := checkCookieNeedRefresh()
-	if err != nil {
-		logger.Logger.Errorln("checkCookieNeedRefresh error:", err)
-	}
-	return needed
-}
+
 func checkCookieNeedRefresh() (bool, int64, error) {
 	uri := "https://passport.bilibili.com/x/passport-login/web/cookie/info?csrf=" + getCsrf()
 	client := http.Client{}
