@@ -1,16 +1,17 @@
 import { createRouter, createWebHashHistory } from "vue-router";
+import {CheckAuth} from "../../wailsjs/go/app/App"
+
 import routes from './routes'
 const router =  createRouter({ 
     history: createWebHashHistory(),
     routes,
 })
 
-router.beforeEach((to, _, next) => {
+router.beforeEach(async(to, _, next) => {
     if (to.meta.requireAuth) {
         // 判断该路由是否需要登录权限
-        const token = localStorage.getItem('token')
-        const cookie = localStorage.getItem('cookie')
-        if (token == '' || cookie == '') {
+        const auth = await CheckAuth()
+        if (!auth) {
             next({
                 path: '/login',
                 query: {

@@ -62,6 +62,19 @@ func checkCookieNeedRefresh() (bool, int64, error) {
 	return false, 0, nil
 }
 
+func CheckCookieValid() bool {
+	logger.Logger.Println("检查cookie有效性")
+	refresh, _, err := checkCookieNeedRefresh()
+	if err != nil {
+		if err.Error() == "cookie有效" {
+			return true
+		} else {
+			return false
+		}
+	}
+	return refresh
+}
+
 func RefreshCookie() error {
 	// 获取 refresh_csrf
 	refresh, _, err := checkCookieNeedRefresh()

@@ -1,5 +1,5 @@
 import {HideToTray} from '../../../wailsjs/go/app/App'
-import {Quit,BrowserOpenURL,WindowSetAlwaysOnTop} from '../../../wailsjs/runtime'
+import {Quit,BrowserOpenURL,WindowSetAlwaysOnTop} from '../../../wailsjs/runtime/runtime'
 
 export const JumpToLiveRoom =(e:MouseEvent)=> {
     e.preventDefault()

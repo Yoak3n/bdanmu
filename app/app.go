@@ -75,3 +75,7 @@ func (a *App) SyncAuth() []string {
 func (a *App) SyncRoom() int {
 	return config.Conf.RoomId
 }
+
+func (a *App) CheckAuth() bool {
+	return config.CheckCookieValid()
+}
