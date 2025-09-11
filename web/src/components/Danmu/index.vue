@@ -17,7 +17,7 @@
                 </div>
                 <div class="message-box">
                     <div class="message" v-html="props.danmu.content">
-                </div>
+                    </div>
 
                 </div>
             </div>
@@ -72,36 +72,52 @@ const props = defineProps(
         .content {
             width: 85%;
             padding: 1%;
-            
+
             .message-box {
                 display: flex;
                 font-size: 16px;
                 width: 100%;
-                .message{
+
+                .message {
+                    position: relative;
                     max-width: 95%;
                     background-color: #6ed7db;
                     font-size: 20px;
-                    color:#fff;
-                    word-wrap:break-word;
+                    color: #fff;
+                    word-wrap: break-word;
                     overflow-wrap: break-word;
-                    border-radius: 10px 20px  20px 10px;
+                    border-radius: 10px 20px 20px 10px;
                     padding: 0 15px 0 10px;
                     align-items: center;
                     font-weight: bold;
-                
+
+                    &::before {
+                        position: absolute;
+                        content: "";
+                        bottom: -5px;
+                        /* 根据气泡大小调整 */
+                        left: 50%;
+                        margin-left: -10px;
+                        /* 用于水平居中箭头 */
+                        border-width: 10px 10px 0;
+                        /* 根据气泡大小调整 */
+                        border-style: solid;
+                        border-color:  #6ed7db  transparent transparent ;
+                    }
                 }
-                
+
             }
 
             .info {
                 // background-color: bisque;
                 border-radius: 5px;
-                margin: 0 ;
+                margin: 0;
                 height: 1.5rem;
                 line-height: 1.5rem;
                 display: flex;
                 justify-content: left;
                 width: 400px;
+
                 .name {
                     color: rgb(189, 193, 197);
                     font-size: 1rem;

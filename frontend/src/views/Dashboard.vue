@@ -10,21 +10,22 @@
     </n-affix>
     <n-infinite-scroll class="danmu-box" style="z-index: -1;">
       <transition-group name="fade" tag="div">
-          <Danmubox v-for="(danmu, index) in danmus" :id="index == danmus.length - 1 ? 'bottom' : ''" :key="danmu.message_id" class="danmu-item" :danmu="danmu" />
+        <Danmubox v-for="(danmu, index) in danmus" :id="index == danmus.length - 1 ? 'bottom' : ''"
+          :key="danmu.message_id" class="danmu-item" :danmu="danmu" />
       </transition-group>
     </n-infinite-scroll>
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, nextTick,onActivated} from 'vue';
+import { ref, onMounted, nextTick, onActivated } from 'vue';
 import { NAffix, NInfiniteScroll } from 'naive-ui'
-import { useRoute,useRouter } from 'vue-router';
-import { useRoomStore} from '@/store'
+import { useRoute, useRouter } from 'vue-router';
+import { useRoomStore } from '@/store'
 import Danmubox from '../components/Danmu/index.vue'
 import SuperChatbox from '../components/SuperChat/index.vue'
 import type { Danmu } from '../components/Danmu/danmu'
 import type { SuperChat } from '../components/SuperChat/super_chat';
-import { type User,type Room,type Message, MessageType} from '../components/types'
+import { type User, type Room, type Message, MessageType } from '../components/types'
 import { EventsOn, EventsOff, EventsEmit } from '../../wailsjs/runtime'
 
 const roomsStore = useRoomStore()
@@ -36,31 +37,33 @@ let superChats = ref<Array<SuperChat>>([])
 
 onActivated(() => {
   if ($route.query.from == "login") {
+    danmus.value = []
+    superChats.value = []
   } else if ($route.query.from == "setting") {
     danmus.value = []
-  }else{
+  } else {
     if (roomsStore.room_id == 0 || roomsStore.room_id == null) {
-      window.$message.error("未找到直播间",{keepAliveOnHover: true})
-      $router.push({name: 'Setting', query: {from: 'dashboard'}})
-    }else{
-      EventsEmit("change",roomsStore.room_id)
+      window.$message.error("未找到直播间", { keepAliveOnHover: true })
+      $router.push({ name: 'Setting', query: { from: 'dashboard' } })
+    } else {
+      EventsEmit("change", roomsStore.room_id)
     }
   }
 })
 
 onMounted(() => {
-    EventsOn('started', function (room:Room) {
-      roomsStore.setRoomTitle(room.title)
-      roomsStore.setRoomId(room.short_id)
-      window.$message.create("已连接房间：" + room.short_id, { duration: 5000 })
-      EventsOff("message", "user")
-      EventsOn("message", reciveMessage)
-      EventsOn("user", updateDanmu)
-    })
-    EventsOn('error', function (err:string) {
-      window.$message.error(err,{keepAliveOnHover: true,duration: 5000})
-      $router.push({name: 'Setting', query: {from: 'dashboard'}})
-    })
+  EventsOn('started', function (room: Room) {
+    roomsStore.setRoomTitle(room.title)
+    roomsStore.setRoomId(room.short_id)
+    window.$message.create("已连接房间：" + room.short_id, { duration: 5000 })
+    EventsOff("message", "user")
+    EventsOn("message", reciveMessage)
+    EventsOn("user", updateDanmu)
+  })
+  EventsOn('error', function (err: string) {
+    window.$message.error(err, { keepAliveOnHover: true, duration: 5000 })
+    $router.push({ name: 'Setting', query: { from: 'dashboard' } })
+  })
 })
 
 
@@ -108,21 +111,25 @@ const updateDanmu = (user: User) => {
 </script>
 
 <style scoped lang="less">
-.fade-move{
-transition: all .5s ease;
+.fade-move {
+  transition: all .5s ease;
 }
+
 .fade-leave-active,
 .fade-enter-active {
   transition: all .5s ease;
 }
+
 .fade-leave-to,
-.fade-enter-from{
+.fade-enter-from {
   opacity: 0;
   transform: translateX(-30px);
 }
-.fade-leave-active{
+
+.fade-leave-active {
   position: absolute;
 }
+
 .dashboard-wrapper {
   height: 100%;
   width: 100%;
