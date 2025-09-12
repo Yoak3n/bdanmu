@@ -14,7 +14,7 @@
   "info": {
     "productName": "bdanmu",
     "description": "一个简单易用的bilibili弹幕机",
-    "productVersion": "0.0.2",
+    "productVersion": "0.1.0",
     "copyright": "Copyright © 2024 Yoake"
   }
 }
