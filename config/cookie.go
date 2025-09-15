@@ -50,7 +50,7 @@ func checkCookieNeedRefresh() (bool, int64, error) {
 	}
 	defer res.Body.Close()
 	body, err := io.ReadAll(res.Body)
-	logger.Logger.Println(string(body))
+	// logger.Logger.Println(string(body))
 	data := gjson.ParseBytes(body)
 	if data.Get("code").Int() != 0 {
 		return true, 0, err

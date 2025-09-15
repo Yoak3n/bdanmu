@@ -4,7 +4,6 @@ import (
 	"bdanmu/api/router"
 	"bdanmu/app"
 	"bdanmu/app/runtime"
-	"bdanmu/config"
 
 	"bdanmu/database"
 	"bdanmu/package/logger"
@@ -26,7 +25,7 @@ func main() {
 	// if !config.CheckCookieNeedRefreshFromFrontend() {
 	// 	config.SetCookieRefresh()
 	// }
-	config.RefreshCookie()
+	// config.RefreshCookie()
 	go func() {
 		util.CreateDirNotExists("data/webview")
 		database.InitDatabase()

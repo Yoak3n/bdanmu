@@ -10,8 +10,8 @@ import { CheckAuth } from '../../wailsjs/go/app/App'
 
 const $router = useRouter()
 onMounted(async () => {
-    const need = await CheckAuth()
-    if (need) {
+    const authed = await CheckAuth()
+    if (!authed) {
         localStorage.removeItem("cookie")
         localStorage.removeItem("token")
         await $router.push("/login")
